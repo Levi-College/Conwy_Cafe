@@ -2,6 +2,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddHttpClient(); // Add this line to register HttpClient for dependency injection
+
 
 var app = builder.Build();
 

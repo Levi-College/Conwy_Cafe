@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../Conwy_Cafe_Admin_App/Conwy_Cafe_Admin_App.csproj" Id="572ddaf1-98e1-4af5-bf84-be3eb164347f" />
+  <Project Path="../Conwy_Cafe_Web_API/Conwy_Cafe_Web_API.csproj" Id="fd7a9e6c-26d0-4002-84c3-9551f8afbe4b" />
+  <Project Path="Conwy_Cafe_Webpage.csproj" />
+</Solution>
