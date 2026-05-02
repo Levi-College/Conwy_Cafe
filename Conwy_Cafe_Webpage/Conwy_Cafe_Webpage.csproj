@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.26" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ConwyCafe.Shared\ConwyCafe.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

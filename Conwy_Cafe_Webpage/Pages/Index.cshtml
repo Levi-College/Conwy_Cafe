@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Conwy Cafe";
 }
 
 <div class="text-center">
@@ -9,7 +9,6 @@
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<h2>API Connection Test: Calculator</h2>
 
 @* <form method="post">
     <input type="number" name="num1" step="any" placeholder="First Number" /> +
@@ -21,3 +20,21 @@
 {
     <h3 style="color: green;">@Model.DisplayResult</h3>
 } *@
+
+@foreach (var basket in Model.Baskets)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Basket ID: @basket.Id</h5>
+            <p class="card-text">Basket Name: @basket.Name</p>
+            <p class="card-text">Total Price: @basket.Price.ToString()</p>
+            <p class="card-text">Items:</p>
+            @* <ul>
+                @foreach (var item in basket)
+                {
+                    <li>@item.Name - Quantity: @item.Quantity, Price: @item.Price.ToString("C")</li>
+                }
+            </ul> *@
+        </div>
+    </div>
+}

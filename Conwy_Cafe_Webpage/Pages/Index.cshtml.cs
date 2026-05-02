@@ -1,3 +1,4 @@
+using ConwyCafe.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -5,46 +6,38 @@ namespace Conwy_Cafe_Webpage.Pages
 {
     public class IndexModel : PageModel
     {
+        // Used for logging (optional, but good for debugging)
         private readonly ILogger<IndexModel> _logger;
-
-        //public IndexModel(ILogger<IndexModel> logger)
-        //{
-        //    _logger = logger;
-        //}
-
-        public void OnGet()
-        {
-
-        }
-
-        // Trial run for calculations
         private readonly HttpClient _http;
 
-        // Stores the answer to show on the page
-        public string DisplayResult { get; set; }
-        public IndexModel(IHttpClientFactory factory)
+        public IndexModel(ILogger<IndexModel> logger, IHttpClientFactory factory)
         {
             _http = factory.CreateClient();
+            _logger = logger;
         }
 
-        // This is called when the form is submitted (POST)
-        //public async Task OnPostAsync(double num1, double num2)
-        //{
-        //    // 1. Point to your API's specific address
-        //    // Check your API's port number (e.g., 5001 or 7000)
-        //    string url = $"https://localhost:7008/api/calculator/add?a={num1}&b={num2}";
+        // Holds the list (to loop through in the Razor page)
+        public List<Basket> Baskets { get; set; } = new List<Basket>();
 
-        //    // 2. Make the call and wait for the response
-        //    var response = await _http.GetAsync(url);
+        public async Task OnGetAsync()
+        {
+            try
+            {
+                // Call the API to get the baskets
+                var response = await _http.GetFromJsonAsync<List<Basket>>("https://localhost:7008/api/basket");
+               
 
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        // 3. Read the JSON result
-        //        var data = await response.Content.ReadFromJsonAsync<CalcResult>();
-        //        DisplayResult = $"The API says: {data.Answer}";
-        //    }
-        //}
-        //// Simple class to catch the API response
-        //public class CalcResult { public double Answer { get; set; } }
+                if (response != null)
+                {
+                    Baskets = response;
+                }
+              
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching baskets from API");
+                // Optionally, you could set an error message to display on the page
+            }
+        }
     }
 }
