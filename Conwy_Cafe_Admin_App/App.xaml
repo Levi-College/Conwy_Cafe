@@ -4,6 +4,16 @@
              xmlns:local="clr-namespace:Conwy_Cafe_Admin_App"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <ResourceDictionary Source="/Utilities/DateTemplate.xaml"/>
+
+                <!--Style sheets attatched-->
+                <ResourceDictionary Source="/Styles/StyleSheet.xaml"/>
+
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
