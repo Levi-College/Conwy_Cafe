@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace BayWyn_Couriers.Utilities
+namespace Conwy_Cafe_Admin_App.Utilities
 {
     // This is the class that will be used to bind commands to the UI elements in the MVVM pattern. It implements the ICommand interface, allowing it to be used as a command source in WPF applications.
     class RelayCommand : ICommand

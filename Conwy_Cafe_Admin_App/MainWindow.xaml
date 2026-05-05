@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Conwy_Cafe_Admin_App"
+        xmlns:local="clr-namespace:Conwy_Cafe_Admin_App" 
+        xmlns:viewmodels="clr-namespace:Conwy_Cafe_Admin_App.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:AdminVM}"
         mc:Ignorable="d"
         d:DesignHeight="800" d:DesignWidth="1000"
         Title="MainWindow" Height="450" Width="800">
@@ -28,9 +30,9 @@
             </StackPanel>
 
             <StackPanel Grid.Row="1" Margin="10,20,10,0" >
-                <RadioButton Content="Manage Baskets" Command="{Binding JobsCommand}" IsChecked="True" Style="{StaticResource SidebarNavigationButtonStyle}"/>
-                <RadioButton Content="Manage Items" Command="{Binding ReportsCommand}" Style="{StaticResource SidebarNavigationButtonStyle}"/>
-                <RadioButton Content="Manage Order" Command="{Binding ContractsCommand}" Style="{StaticResource SidebarNavigationButtonStyle}"/>
+                <RadioButton Content="Manage Baskets" Command="{Binding BasketsCommand}" IsChecked="True" Style="{StaticResource SidebarNavigationButtonStyle}"/>
+                <RadioButton Content="Manage Items" Command="{Binding ItemsCommand}" Style="{StaticResource SidebarNavigationButtonStyle}"/>
+                <RadioButton Content="Manage Order" Command="{Binding OrdersCommand}" Style="{StaticResource SidebarNavigationButtonStyle}"/>
                
             </StackPanel>
         </Grid>
@@ -49,13 +51,10 @@
 
                 <TextBlock Text="Admin Dashboard" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0" FontSize="22" FontWeight="Bold" Foreground="White"/>
 
-                <!--<StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,0,30,0">
-                    <Button Content="Logout" Command="{Binding LogoutCommand}" Width="80" Height="30"/>
-                </StackPanel>-->
             </Grid>
 
             <Border Grid.Row="1" Style="{StaticResource SubViewBorder}">
-                <ContentControl Content="{Binding CurrentSubView}"/>
+                <ContentControl Content="{Binding CurrentView}"/>
             </Border>
         
     </Grid>
