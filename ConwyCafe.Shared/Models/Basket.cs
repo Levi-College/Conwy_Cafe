@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,5 +17,7 @@ namespace ConwyCafe.Shared.Models
         public decimal? ExtraPricePerPerson { get; set; } // Price for additional person
         public string? ImagePath { get; set; }
         public bool IsActive { get; set; } // Checks if the basket is currentlty active and can be ordered
+        public List<BasketItems> BasketItems { get; set; } = new List<BasketItems>(); // Collection of items in the basket
+
     }
 }

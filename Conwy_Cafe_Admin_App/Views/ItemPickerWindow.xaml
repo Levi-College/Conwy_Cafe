@@ -1,0 +1,37 @@
+﻿<Window x:Class="Conwy_Cafe_Admin_App.Views.ItemPickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Select an Item" Height="400" Width="350"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="#1A1F26">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Dynamic Title (e.g., "Select a Main") -->
+        <TextBlock x:Name="TitleText" Text="Select Item" FontSize="18" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+
+        <!-- The List of Filtered Items -->
+        <ListBox x:Name="ItemsListBox" Grid.Row="1" Background="#252B33" Foreground="White" 
+                 DisplayMemberPath="Name" SelectedValuePath="Id"
+                 BorderBrush="#3A414A" BorderThickness="1"/>
+
+        <!-- Action Buttons -->
+        <Grid Grid.Row="2" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="Cancel" Click="Cancel_Click" Grid.Column="0" Margin="0,0,5,0" 
+                    Background="#555" Foreground="White" Padding="5"/>
+
+            <Button Content="Confirm Swap" Click="Confirm_Click" Grid.Column="1" Margin="5,0,0,0" 
+                    Background="#2ECC71" Foreground="White" FontWeight="Bold" Padding="5"/>
+        </Grid>
+    </Grid>
+</Window>
