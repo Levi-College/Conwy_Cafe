@@ -10,4 +10,9 @@
     <PackageReference Include="System.Net.Http.Json" Version="10.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\Baskets\" />
+    <Folder Include="Images\Items\" />
+  </ItemGroup>
+
 </Project>
