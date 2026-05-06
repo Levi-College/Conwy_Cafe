@@ -15,10 +15,27 @@ namespace Conwy_Cafe_Web_API.Controllers
         public BasketController(AppDbContext context) { _context = context; }
 
         // Getting the baskets (api/baskets)
+        // A parameter is used to differentiate between active and all baskets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Basket>>> GetBaskets()
+        public async Task<ActionResult<IEnumerable<Basket>>> GetBaskets([FromQuery] bool showAll = false)
         {
-            return await _context.Baskets.Where(b => b.IsActive).ToListAsync();
+            // Setting up the query 
+            var query = _context.Baskets
+                .Include(b => b.BasketItems) // Include related BasketItems (joining the baskets and the baskets items)
+                .ThenInclude((bi => bi.Item)) // Include the related Item for each BasketItem (joining the baskets items and the items)
+                .AsQueryable();
+
+            if (!showAll)
+            {
+                // If showAll is false, filter to only active baskets
+                query = query.Where(b => b.IsActive);
+            }
+
+            //return await _context.Baskets.Where(b => b.IsActive).ToListAsync();
+
+            // Gets baskets depending on the query
+            return await query.ToListAsync();
         }
+
     }
 }

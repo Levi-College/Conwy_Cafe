@@ -88,11 +88,16 @@
 
                             <!-- Category Dropdown -->
                             <Label Content="Basket Category:" Style="{StaticResource LabelStyle}"/>
-                            <ComboBox ItemsSource="{Binding AllCategories}" 
+                            <ComboBox ItemsSource="{Binding CategoryDisplayNames}"
+                                      SelectedValue="{Binding SelectedBasket.Category}"
+                                      SelectedValuePath="Key"
+                                      DisplayMemberPath="Value"
+                                      Style="{StaticResource ModernComboBoxStyle}" IsReadOnly="True"/>
+                            <!--<ComboBox ItemsSource="{Binding AllCategories}" 
                                       SelectedValue="{Binding SelectedBasket.CategoryId, Mode=TwoWay}"
                                       SelectedValuePath="Id" 
                                       DisplayMemberPath="Name"
-                                      Style="{StaticResource ModernComboBoxStyle}"/>
+                                      />-->
 
 
                             <!-- Description -->
@@ -110,12 +115,12 @@
 
                                 <StackPanel Grid.Column="0" Margin="0,0,5,0">
                                     <Label Content="Base Price:" Style="{StaticResource LabelStyle}"/>
-                                    <TextBox Text="{Binding SelectedBasket.Price, Mode=TwoWay, StringFormat={}{0:C}}" Style="{StaticResource InputTextBox}"/>
+                                    <TextBox Text="{Binding SelectedBasket.Price, Mode=TwoWay, StringFormat={}{0:C}, ConverterCulture='en-GB' }"  Style="{StaticResource InputTextBox}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="5,0,0,0">
                                     <Label Content="Extra Per Person:" Style="{StaticResource LabelStyle}"/>
-                                    <TextBox Text="{Binding SelectedBasket.ExtraPricePerPerson, Mode=TwoWay, StringFormat={}{0:C}}" Style="{StaticResource InputTextBox}"/>
+                                    <TextBox Text="{Binding SelectedBasket.ExtraPricePerPerson, Mode=TwoWay, StringFormat={}{0:C}, ConverterCulture='en-GB'}" Style="{StaticResource InputTextBox}"/>
                                 </StackPanel>
 
 
@@ -129,21 +134,23 @@
                             <!-- Items Summary List -->
                             <Label Content="Included Items:" Style="{StaticResource LabelStyle}"/>
                             <DataGrid ItemsSource="{Binding SelectedBasket.BasketItems}" 
-          AutoGenerateColumns="False" 
-          IsReadOnly="True" 
-          MaxHeight="150"
-          Style="{StaticResource MainDataGridStyle}">
+                                      AutoGenerateColumns="False" 
+                                      IsReadOnly="True" 
+                                      MaxHeight="150"
+                                      Style="{StaticResource MainDataGridStyle}">
+                                
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Type" Binding="{Binding ItemType}" Width="80"/>
-                                    <DataGridTextColumn Header="Item Name" Binding="{Binding Name}" Width="*"/>
+                                    <DataGridTextColumn Header="Type" Binding="{Binding Item.ItemType}" Width="80"/>
+                                    <DataGridTextColumn Header="Item Name" Binding="{Binding Item.Name}" Width="*"/>
                                 </DataGrid.Columns>
+                                
                             </DataGrid>
 
                             <!-- Trigger Button for the Dialog -->
                             <Button Content="Manage Items &amp; Images" 
-        Command="{Binding OpenEditDialogCommand}"
-        Margin="0,10,0,0" 
-        Style="{StaticResource PageButton}"/>
+                                    Command="{Binding OpenEditDialogCommand}"
+                                    Margin="0,10,0,0" 
+                                    Style="{StaticResource PageButton}"/>
 
                             <!-- Status Checkbox -->
                             <CheckBox IsChecked="{Binding SelectedBasket.IsActive, Mode=TwoWay}" 

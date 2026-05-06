@@ -13,5 +13,6 @@ namespace ConwyCafe.Shared.Models
         public int Quantity { get; set; } // Quantity of the item in the basket
         public bool IsDeleted { get; set; } // Checks if the basket is currentlty active and can be ordered
 
+        public Item Item { get; set; } // Navigation property to Item
     }
 }
