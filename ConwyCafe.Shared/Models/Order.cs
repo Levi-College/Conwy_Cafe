@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConwyCafe.Shared.Models
 {
-     public class Orders
+     public class Order
     {
     }
 }

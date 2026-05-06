@@ -19,7 +19,6 @@ namespace Conwy_Cafe_Web_API.Controllers
         public async Task<ActionResult<IEnumerable<Basket>>> GetBaskets()
         {
             return await _context.Baskets.Where(b => b.IsActive).ToListAsync();
-
         }
     }
 }

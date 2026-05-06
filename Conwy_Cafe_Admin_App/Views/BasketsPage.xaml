@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Conwy_Cafe_Admin_App.Views"
+             xmlns:local="clr-namespace:Conwy_Cafe_Admin_App.Views" 
+             xmlns:viewmodels="clr-namespace:Conwy_Cafe_Admin_App.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:BasketsVM}"
              mc:Ignorable="d" 
-                     d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
 
     <Grid Margin="5">
         <Grid.RowDefinitions>
@@ -15,13 +17,13 @@
 
         <Grid Grid.Row="0" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ClientsFilterList}" Style="{StaticResource ModernComboBoxStyle}"
+                <!--<ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ClientsFilterList}" Style="{StaticResource ModernComboBoxStyle}"
                SelectedItem="{Binding SelectedClientStatus, UpdateSourceTrigger=PropertyChanged}"
-               Margin="10" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+               Margin="10" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center"/>-->
                 <Button Content="Refresh List" Style="{StaticResource PageButton}" Command="{Binding RefreshClientsCommand}"/>
             </StackPanel>
 
-            <Button Content="New Client" Command="{Binding NewClientCommand}"  Style="{StaticResource NewJobButton}" />
+            <!--<Button Content="New Client" Command="{Binding NewClientCommand}"  Style="{StaticResource NewJobButton}" />-->
         </Grid>
 
         <Grid Grid.Row="1">
@@ -37,15 +39,15 @@
 
 
                 <DataGrid Style="{StaticResource MainDataGridStyle}"
-                  ItemsSource="{Binding ClientList}" 
-                  SelectedItem="{Binding SelectedClient}"
+                  ItemsSource="{Binding AllBaskets}" 
+                  SelectedItem="{Binding SelectedBasket}"
                   AutoGenerateColumns="False" 
                   IsReadOnly="True">
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding ClientId}" Width="50"/>
-                        <DataGridTextColumn Header="Client Name" Binding="{Binding Name}" Width="2*"/>
-                        <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="2*"/>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Basket" Binding="{Binding Name}" Width="2*"/>
+                        <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2*"/>
 
                     </DataGrid.Columns>
                 </DataGrid>
@@ -69,31 +71,66 @@
                     <TextBlock Text="Basket Details" FontSize="18" FontWeight="Bold" Margin="0,0,0,20" Foreground="White"/>
 
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
+                        <StackPanel Margin="10">
+
+                            <!-- Basket ID (Read Only) -->
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Basket ID:" Style="{StaticResource LabelStyle}" Grid.Column="0"/>
+                                <TextBox Text="{Binding SelectedBasket.Id, Mode=OneWay}" IsReadOnly="True" Style="{StaticResource InputTextBox}" Grid.Column="1"/>
+                            </Grid>
+
+                            <!-- Basket Name -->
+                            <Label Content="Basket Name:" Style="{StaticResource LabelStyle}"/>
+                            <TextBox Text="{Binding SelectedBasket.Name, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>
+
+                            <!-- Category Dropdown -->
+                            <Label Content="Basket Category:" Style="{StaticResource LabelStyle}"/>
+                            <ComboBox ItemsSource="{Binding AllCategories}" 
+                                      SelectedValue="{Binding SelectedBasket.CategoryId, Mode=TwoWay}"
+                                      SelectedValuePath="Id" 
+                                      DisplayMemberPath="Name"
+                                      Style="{StaticResource ModernComboBoxStyle}"/>
+                    
+
+                            <!-- Description -->
+                            <Label Content="Description:" Style="{StaticResource LabelStyle}"/>
+                            <TextBox Text="{Binding SelectedBasket.Description, Mode=TwoWay}" Style="{StaticResource InputTextBox}"
+                             Height="60" VerticalContentAlignment="Top" 
+                             TextWrapping="Wrap" AcceptsReturn="True"/> 
+
+                            <!-- Prices Section -->
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Label Content="Client ID:" Style="{StaticResource LabelStyle}" Grid.Column="0"/>
-                                <TextBox Text="{Binding SelectedClient.ClientId, Mode=TwoWay}" IsReadOnly="True" Style="{StaticResource InputTextBox}"
-                                 Grid.Column="1"/>
+                                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                    <Label Content="Base Price:" Style="{StaticResource LabelStyle}"/>
+                                    <TextBox Text="{Binding SelectedBasket.Price, Mode=TwoWay, StringFormat={}{0:C}}" Style="{StaticResource InputTextBox}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                    <Label Content="Extra Per Person:" Style="{StaticResource LabelStyle}"/>
+                                    <TextBox Text="{Binding SelectedBasket.ExtraPricePerPerson, Mode=TwoWay, StringFormat={}{0:C}}" Style="{StaticResource InputTextBox}"/>
+                                </StackPanel>
                             </Grid>
 
-                            <Label Content="Contact Person / Full Name:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedClient.Name, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>
+                            <!-- Status Checkbox -->
+                            <CheckBox IsChecked="{Binding SelectedBasket.IsActive, Mode=TwoWay}" 
+                  Content="Is Actively Selling?" 
+                  Margin="0,15,0,0"
+                  FontSize="14"
+                  VerticalContentAlignment="Center"/>
 
-                            <Label Content="Contact Email Address:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedClient.Email, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>
+                            <!-- Image Path (For Preview/Reference) -->
+                            <Label Content="Image Path:" Style="{StaticResource LabelStyle}" Margin="0,10,0,0"/>
+                            <TextBox Text="{Binding SelectedBasket.ImagePath, Mode=TwoWay}" Style="{StaticResource InputTextBox}" IsReadOnly="True"/>
 
-                            <Label Content="Contact Phone Number:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedClient.Phone, Mode=TwoWay}" Style="{StaticResource InputTextBox}" InputScope="TelephoneNumber"/>
-
-                            <Label Content="Client/Business Address:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedClient.ClientAddress, Mode=TwoWay}" Style="{StaticResource InputTextBox}"
-                             Height="80" VerticalContentAlignment="Top" 
-                             TextWrapping="Wrap" AcceptsReturn="True"/>
                         </StackPanel>
                     </ScrollViewer>
 
