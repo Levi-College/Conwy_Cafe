@@ -12,16 +12,25 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         public EditBasketVM(Basket SelectedBasket, List<Item> Items)
         {
             // Work on a copy so we can "Cancel" without ruining the main list
-            EditBasket = SelectedBasket;
+            EditBasket = new Basket
+            {
+                Id = SelectedBasket.Id,
+                Name = SelectedBasket.Name,
+                Description = SelectedBasket.Description,
+                Price = SelectedBasket.Price,
+                ExtraPricePerPerson = SelectedBasket.ExtraPricePerPerson,
+                ImagePath = SelectedBasket.ImagePath,
+                IsActive = SelectedBasket.IsActive,
+                Category = SelectedBasket.Category,
+                BasketItems = SelectedBasket.BasketItems.ToList()
+            };
+
             AllItems = Items;
             LoadData();
 
             CancelUpdateCommand = new RelayCommand(execute: obj => CancelUpdate(obj as Window));
             SaveUpdateCommand = new RelayCommand(execute: obj => SaveUpdate(obj as Window));
         }
-
-
-
 
         // Declaring variables and collections
         private Basket _editBasket;
@@ -31,9 +40,9 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         public List<Item> SideItems { get; set; } = new List<Item>();
         public List<Item> DrinkItems { get; set; } = new List<Item>();
 
-        public Item BasketMainItem;
-        public List<Item> BasketSideItems = new List<Item>();
-        public Item BasketDrinkItem;
+        //public Item BasketMainItem;
+        //public List<Item> BasketSideItems = new List<Item>();
+        //public Item BasketDrinkItem;
 
         public Dictionary<BasketCategory, string> CategoryDisplayNames { get; } = new()
         {
@@ -74,11 +83,52 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 // If the item type is main, it returns that item as the main slot. If no main item is found, it returns null.
                 foreach (var item in EditBasket.BasketItems)
                 {
-                    if (item.Item != null && item.Item.ItemType == ItemType.Main) { return item; }
+                    if (item.Item?.ItemType == ItemType.Main) { return item; }
                 }
                 return null;
             }
-            set { OnPropertyChanged(nameof(MainSlot)); }
+            set
+            {
+                // This goes through the basket items of the basket, checks the item and type.
+                // If the item type is main, it updates that item with the new value. If no main item is found, it adds a new BasketItem with the main item to the basket.
+                foreach (var items in EditBasket.BasketItems)
+                {
+                    if (items.Item.ItemType == ItemType.Main)
+                    {
+                        items.ItemId = value.ItemId;
+                        items.Item = value.Item;
+                        break;
+                    }
+                }
+            }
+        }
+
+        public BasketItems DrinkSlot
+        {
+            get
+            {
+                // This goes through the basket items of the basket, checks the item (null check) and checks the item type.
+                // If the item type is drink, it returns that item as the drink slot. If no drink item is found, it returns null.
+                foreach (var items in EditBasket.BasketItems)
+                {
+                    if (items.Item != null && items.Item.ItemType == ItemType.Drink) { return items; }
+                }
+                return null;
+            }
+            set
+            {
+                // This goes through the basket items of the basket, checks the item and type.
+                // If the item type is drink, it updates that item with the new value. If no drink item is found, it adds a new BasketItem with the drink item to the basket.
+                foreach (var item in EditBasket.BasketItems)
+                {
+                    if (item.Item.ItemType == ItemType.Drink)
+                    {
+                        item.ItemId = value.ItemId;
+                        item.Item = value.Item;
+                        break;
+                    }
+                }
+            }
         }
 
         // Although the logic is similar to the main slots, there are 3 sides and thus a list is used to store the side slots instead of a single variable.
@@ -97,28 +147,26 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 }
                 return sideSlots;
             }
-            set { OnPropertyChanged(nameof(SideSlots)); }
-        }
-
-        public BasketItems DrinkSlot
-        {
-            get
+            set
             {
-                // This goes through the basket items of the basket, checks the item (null check) and checks the item type.
-                // If the item type is drink, it returns that item as the drink slot. If no drink item is found, it returns null.
-                foreach (var item in EditBasket.BasketItems)
-                {
-                    if (item.Item != null && item.Item.ItemType == ItemType.Drink) { return item; }
-                }
-                return null;
+                
             }
-            set { OnPropertyChanged(nameof(DrinkSlot)); }
         }
 
+        public IEnumerable<BasketItems> GetSideSlots()
+        {
+            List<BasketItems> sideSlots = new List<BasketItems>();
+            foreach (var item in EditBasket.BasketItems)
+            {
+                if (item.Item?.ItemType == ItemType.Side) { sideSlots.Add(item); }
+            }
+            return sideSlots;
+        }
 
-        // Commands
-        //public ICommand SwapItemCommand { get; }
-        //public ICommand SaveCommand { get; }
+        public BasketItems SideSlot1 => GetSideSlots().ElementAtOrDefault(0);
+        public BasketItems SideSlot2 => GetSideSlots().ElementAtOrDefault(1);
+        public BasketItems SideSlot3 => GetSideSlots().ElementAtOrDefault(2);
+
 
         //Methods
         // Methods
@@ -158,13 +206,14 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             foreach (var basketItem in EditBasket.BasketItems)
             {
                 // Checks if it is in the list
-                if (!itemIds.Contains(basketItem.Item.Id)) 
+                if (itemIds.Contains(basketItem.ItemId)) 
                 { MessageBox.Show("Duplicate Items found"); return; } // stops the method if it is not unique
                 // If not add to the basket item ids list
                 itemIds.Add(basketItem.ItemId);
             }
 
-            var response = await App.Http.PutAsJsonAsync($"/api/basket/{EditBasket.Id}", EditBasket); // Make a PUT request to the specified API endpoint to update the basket with the changes made in the EditBasket object. The response from the API is stored in the 'response' variable.
+            // Make a PUT request to the specified API endpoint to update the basket with the changes made in the EditBasket object. The response from the API is stored in the 'response' variable.
+            var response = await App.Http.PutAsJsonAsync($"/api/basket/{EditBasket.Id}", EditBasket); 
 
             if (response.IsSuccessStatusCode) // Checks if the response indicates a successful status code (e.g., 200 OK). If the update was successful, it proceeds to close the edit window.
             {

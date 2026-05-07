@@ -57,15 +57,15 @@
 
                     <TextBlock Text="Side Dishes (3)" Foreground="#2ECC71" FontSize="12" Margin="0,5"/>
                     <ComboBox ItemsSource="{Binding SideItems}" 
-          SelectedValue="{Binding SideSlots[0].ItemId}"
+          SelectedValue="{Binding SideSlot1.ItemId}"
           SelectedValuePath="Id" DisplayMemberPath="Name"
           Style="{StaticResource ModernComboBoxStyle}"/>
                     <ComboBox ItemsSource="{Binding SideItems}" 
-          SelectedValue="{Binding SideSlots[1].ItemId}"
+          SelectedValue="{Binding SideSlot2.ItemId}"
           SelectedValuePath="Id" DisplayMemberPath="Name"
           Style="{StaticResource ModernComboBoxStyle}" Margin="0,5"/>
                     <ComboBox ItemsSource="{Binding SideItems}" 
-          SelectedValue="{Binding SideSlots[2].ItemId}"
+          SelectedValue="{Binding SideSlot3.ItemId}"
           SelectedValuePath="Id" DisplayMemberPath="Name"
           Style="{StaticResource ModernComboBoxStyle}"/>
                     

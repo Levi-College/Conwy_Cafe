@@ -56,7 +56,7 @@ namespace Conwy_Cafe_Web_API.Controllers
                 .FirstOrDefaultAsync(b => b.Id == id);
 
             // Checks if the basket exists, if it does not exist, return a not found error
-            if (existingBasket != null) { return NotFound("Basket not found."); }
+            if (existingBasket == null) { return NotFound("Basket not found."); }
 
             // Update the existing basket's properties with the values from the updated basket
             // This only updates the properties of the existing basket, it does not update the related BasketItems, you would need to handle that separately if needed
@@ -86,7 +86,8 @@ namespace Conwy_Cafe_Web_API.Controllers
             {
                return StatusCode(500, $"An error occurred while updating the basket: {ex.Message}"); // Return a 500 Internal Server Error with the exception message if an error occurs
             }
-            return BadRequest("Please retry");
+            //return BadRequest("Please retry");
+            return Ok();
         }
 
     }
