@@ -1,5 +1,6 @@
 ﻿using Conwy_Cafe_Admin_App.Utilities;
 using ConwyCafe.Shared.Models;
+using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Input;
 
@@ -149,7 +150,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         }
 
         // To save the changes made.
-        private void SaveUpdate(Window editWindow)
+        private async Task SaveUpdate(Window editWindow)
         {
             // Adding the items (id) to a list to check if they are unique
             List<int> itemIds = new List<int>();
@@ -158,10 +159,27 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             {
                 // Checks if it is in the list
                 if (!itemIds.Contains(basketItem.Item.Id)) 
-                { MessageBox.Show("Duplicate Items found"); return; }
+                { MessageBox.Show("Duplicate Items found"); return; } // stops the method if it is not unique
                 // If not add to the basket item ids list
                 itemIds.Add(basketItem.ItemId);
             }
+
+            var response = await App.Http.PutAsJsonAsync($"/api/basket/{EditBasket.Id}", EditBasket); // Make a PUT request to the specified API endpoint to update the basket with the changes made in the EditBasket object. The response from the API is stored in the 'response' variable.
+
+            if (response.IsSuccessStatusCode) // Checks if the response indicates a successful status code (e.g., 200 OK). If the update was successful, it proceeds to close the edit window.
+            {
+                if (editWindow != null)
+                {
+                    editWindow.DialogResult = true; // Set DialogResult to true to indicate success
+                    editWindow.Close(); // Close the edit window
+                }
+            }
+            else
+            {
+                MessageBox.Show("Failed to save: " + response.ReasonPhrase); // If the update was not successful, it displays an error message with the reason for the failure.
+            }
+
+
 
             //// Check if the items are valid (uniqe main, max 3 sides, unique drink)
             //foreach (var basketItem in EditBasket.BasketItems)
