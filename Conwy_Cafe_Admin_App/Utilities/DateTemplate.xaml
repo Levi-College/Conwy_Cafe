@@ -8,6 +8,10 @@
         <view:BasketsPage/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type vm:EditBasketVM}">
+        <view:EditBasketWindow/>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type vm:ItemsVM}">
         <view:ItemsPage/>
     </DataTemplate>

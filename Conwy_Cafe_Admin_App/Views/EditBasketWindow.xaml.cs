@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Conwy_Cafe_Admin_App.ViewModels;
+using ConwyCafe.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,11 +17,11 @@ using System.Windows.Shapes;
 namespace Conwy_Cafe_Admin_App.Views
 {
     /// <summary>
-    /// Interaction logic for ItemPickerWindow.xaml
+    /// Interaction logic for EditBasketWindow.xaml
     /// </summary>
-    public partial class ItemPickerWindow : Window
+    public partial class EditBasketWindow : Window
     {
-        public ItemPickerWindow()
+        public EditBasketWindow()
         {
             InitializeComponent();
         }

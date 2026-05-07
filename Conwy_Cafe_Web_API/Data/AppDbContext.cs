@@ -27,6 +27,10 @@ namespace Conwy_Cafe_Web_API.Data
             // This is where you define the Composite Key for the BasketItems table
             modelBuilder.Entity<BasketItems>()
                 .HasKey(bi => new { bi.BasketId, bi.ItemId });
+
+            modelBuilder.Entity<Item>()
+                .Property(i => i.ItemType)
+                .HasConversion<string>();
         }
 
     }

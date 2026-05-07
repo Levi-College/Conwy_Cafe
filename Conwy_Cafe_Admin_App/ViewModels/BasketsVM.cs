@@ -1,8 +1,10 @@
 ﻿using Conwy_Cafe_Admin_App.Utilities;
+using Conwy_Cafe_Admin_App.Views;
 using ConwyCafe.Shared.Models;
 using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Conwy_Cafe_Admin_App.ViewModels
 {
@@ -13,16 +15,19 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         {
             // Loading the data
             LoadData();
-        }
 
+            EditBasketWindowCommand = new RelayCommand(OpenEditBasketWindow);
+        }
 
         // Declaring variables
         private Basket _selectedBasket;
         private Item _selectedItem;
         private Order _selectedOrder;
 
+        public ICommand EditBasketWindowCommand { get; }
+
         public ObservableCollection<Basket> AllBaskets { get; set; } = new ObservableCollection<Basket>();
-        public ObservableCollection<Item> AllItems { get; set; } = new ObservableCollection<Item>();
+        public List<Item> AllItems { get; set; } = new List<Item>();
         public ObservableCollection<Order> AllOrders { get; set; } = new ObservableCollection<Order>();
         //public ObservableCollection<Categories> AllCategories { get; set; } = new ObservableCollection<Categories>();
 
@@ -82,13 +87,24 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             // GetAllBaskets();
         }
 
+        public void OpenEditBasketWindow(object? obj)
+        {            
+            if (SelectedBasket == null)
+            {
+                MessageBox.Show("Please select a basket to edit.");
+                return;
+            }
+            //Setting the datacontext
+            var EditBasketVM = new EditBasketVM(SelectedBasket, AllItems);
+            // This method would contain logic to open a new window for editing a basket. 
+            EditBasketWindow editWindow = new EditBasketWindow();
+            editWindow.DataContext = EditBasketVM;
+            editWindow.ShowDialog();
+        }
+
         public async Task GetAllBaskets()
         {
-            RefreshPage();
-            // This method would contain logic to retrieve all baskets from the data source (e.g., database, API) and populate the relevant properties or collections in the view model. 
-            // For example, it might look like this:
-            // Baskets = BasketService.GetAllBaskets();
-
+            //RefreshPage(); // Can be used to refresh the pages
             try
             {
                 // calling the api to get all baskets and adding them to the observable collection
@@ -103,12 +119,8 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                         AllBaskets.Add(basket); // Add each basket to the 'AllBaskets' observable collection.
                     }
                 }
-
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         // Getting all the items
@@ -116,7 +128,8 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         {
             try
             {
-                var response = await App.Http.GetFromJsonAsync<List<Item>>("/api/items"); // Make a synchronous GET request to the specified API endpoint to retrieve all items. The result is stored in the 'response' variable.
+                // A GET request to the API to get list of items and stores it in response (can loop through)
+                var response = await App.Http.GetFromJsonAsync<List<Item>>("/api/items"); 
                 if (response != null)
                 {
                     AllItems.Clear(); // Clear the existing items in the observable collection before adding new ones to avoid duplicates.
@@ -124,37 +137,10 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                     {
                         AllItems.Add(item); // Add each item to the 'AllItems' observable collection.
                     }
-                    MessageBox.Show("Items retrieved successfully!"); // Show a message box to indicate that the items were retrieved successfully.
                 }
 
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-
-            //Getting all the basket categories
-            //public async Task GetAllCategories()
-            //{
-            //    try
-            //    {
-            //        var response = await App.Http.GetFromJsonAsync<List<Categories>>("/api/categories"); // Make a synchronous GET request to the specified API endpoint to retrieve all categories. The result is stored in the 'response' variable.
-            //        if (response != null)
-            //        {
-            //            AllCategories.Clear(); // Clear the existing categories in the observable collection before adding new ones to avoid duplicates.
-            //            foreach (var category in response) // Iterate through each category in the response (using .Result to get the result of the asynchronous operation).
-            //            {
-            //                AllCategories.Add(category); // Add each category to the 'AllCategories' observable collection.
-            //            }
-            //            MessageBox.Show("Categories retrieved successfully!"); // Show a message box to indicate that the categories were retrieved successfully.
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show(ex.Message);
-            //    }
-            //}
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
 
         }
     }

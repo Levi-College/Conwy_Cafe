@@ -1,0 +1,92 @@
+﻿<Window x:Class="Conwy_Cafe_Admin_App.Views.EditBasketWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Conwy_Cafe_Admin_App.Views" 
+        xmlns:viewmodels="clr-namespace:Conwy_Cafe_Admin_App.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:EditBasketVM}"
+        mc:Ignorable="d"
+        Title="EditBasketWindow" Height="650" Width="400"
+        Background="#1A1F26">
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock Text="Basket Details" FontSize="18" FontWeight="Bold" Foreground="White" Margin="0,0,0,15"/>
+
+            <Label Content="Basket Name" Foreground="Gray"/>
+            <TextBox Text="{Binding EditBasket.Name}" Style="{StaticResource InputTextBox}" Margin="0,0,0,10" Padding="5"/>
+
+            <Label Content="Category" Foreground="Gray"/>
+            <!-- Uses the dictionary and the basket to show the actual details and all categories allowed -->
+            <ComboBox ItemsSource="{Binding CategoryDisplayNames}" 
+                  SelectedValue="{Binding EditBasket.Category}"
+                  SelectedValuePath="Key"
+                  DisplayMemberPath="Value"
+                  Style="{StaticResource ModernComboBoxStyle}"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,5,0">
+                    <Label Content="Base Price" Foreground="Gray"/>
+                    <TextBox Text="{Binding EditBasket.Price}" Padding="5" Style="{StaticResource InputTextBox}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                    <Label Content="Extra Per Person" Foreground="Gray"/>
+                    <TextBox Text="{Binding EditBasket.ExtraPricePerPerson}" Padding="5" Style="{StaticResource InputTextBox}"/>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="Included Items (1-3-1 Rule)" FontSize="16" FontWeight="Bold" Foreground="White" Margin="0,20,0,10"/>
+
+            <Border Background="#252B33" CornerRadius="5" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Main Course" Foreground="#3498DB" FontSize="12" Margin="0,5"/>
+                    <DockPanel LastChildFill="True">
+                        <!--<Button Content="Swap" Click="SwapMain_Click" DockPanel.Dock="Right" Width="60" Margin="10,0,0,0"/>-->
+                        <!--<TextBlock Text="{Binding MainItem.Name, TargetNullValue='No Main Selected'}" VerticalAlignment="Center" Foreground="White"/>-->
+                        <ComboBox ItemsSource="{Binding MainItems }" 
+                                  Style="{StaticResource ModernComboBoxStyle}"
+                                  SelectedValue="{Binding MainSlot.ItemId, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedValuePath="Id" DisplayMemberPath="Name"
+                                  Foreground="White"/>
+                    </DockPanel>
+
+                    <TextBlock Text="Side Dishes (3)" Foreground="#2ECC71" FontSize="12" Margin="0,5"/>
+                    <ComboBox ItemsSource="{Binding SideItems}" 
+          SelectedValue="{Binding SideSlots[0].ItemId}"
+          SelectedValuePath="Id" DisplayMemberPath="Name"
+          Style="{StaticResource ModernComboBoxStyle}"/>
+                    <ComboBox ItemsSource="{Binding SideItems}" 
+          SelectedValue="{Binding SideSlots[1].ItemId}"
+          SelectedValuePath="Id" DisplayMemberPath="Name"
+          Style="{StaticResource ModernComboBoxStyle}" Margin="0,5"/>
+                    <ComboBox ItemsSource="{Binding SideItems}" 
+          SelectedValue="{Binding SideSlots[2].ItemId}"
+          SelectedValuePath="Id" DisplayMemberPath="Name"
+          Style="{StaticResource ModernComboBoxStyle}"/>
+                    
+
+                    <TextBlock Text="Drink" Foreground="#F1C40F" FontSize="12" Margin="0,15,0,5"/>
+                    <DockPanel LastChildFill="True">
+                        <!--<Button Content="Swap" Click="SwapDrink_Click" DockPanel.Dock="Right" Width="60" Margin="10,0,0,0"/>-->
+                        <TextBlock Text="{Binding DrinkItems.Name, TargetNullValue='No Drink Selected'}" VerticalAlignment="Center" Foreground="White"/>
+                        <ComboBox ItemsSource="{Binding DrinkItems}" 
+                                  SelectedValue="{Binding DrinkSlot.ItemId}"
+                                  SelectedValuePath="Id" 
+                                  DisplayMemberPath="Name"
+                                  Style="{StaticResource ModernComboBoxStyle}"/>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+
+            <UniformGrid Columns="2" Margin="0,20,0,0">
+                <Button Content="Cancel" Command="{Binding CancelUpdateCommand}" Margin="5" Padding="10"/>
+                <Button Content="Save Changes" Command="{Binding SaveUpdateCommand}" Background="#2ECC71" Foreground="White" Margin="5" Padding="10"/>
+            </UniformGrid>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

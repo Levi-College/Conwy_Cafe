@@ -33,7 +33,6 @@
                 <RadioButton Content="Manage Baskets" Command="{Binding BasketsCommand}" IsChecked="True" Style="{StaticResource SidebarNavigationButtonStyle}"/>
                 <RadioButton Content="Manage Items" Command="{Binding ItemsCommand}" Style="{StaticResource SidebarNavigationButtonStyle}"/>
                 <RadioButton Content="Manage Order" Command="{Binding OrdersCommand}" Style="{StaticResource SidebarNavigationButtonStyle}"/>
-               
             </StackPanel>
         </Grid>
 

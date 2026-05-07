@@ -7,6 +7,8 @@
              xmlns:viewmodels="clr-namespace:Conwy_Cafe_Admin_App.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:BasketsVM}"
              mc:Ignorable="d" d:DesignWidth="800" Height="1030">
+             <!--d:DataContext="{d:DesignInstance Type=viewmodels:BasketsVM}"-->
+             
 
     <Grid Margin="5">
         <Grid.RowDefinitions>
@@ -93,13 +95,7 @@
                                       SelectedValuePath="Key"
                                       DisplayMemberPath="Value"
                                       Style="{StaticResource ModernComboBoxStyle}" IsReadOnly="True"/>
-                            <!--<ComboBox ItemsSource="{Binding AllCategories}" 
-                                      SelectedValue="{Binding SelectedBasket.CategoryId, Mode=TwoWay}"
-                                      SelectedValuePath="Id" 
-                                      DisplayMemberPath="Name"
-                                      />-->
-
-
+                    
                             <!-- Description -->
                             <Label Content="Description:" Style="{StaticResource LabelStyle}"/>
                             <TextBox Text="{Binding SelectedBasket.Description, Mode=TwoWay}" Style="{StaticResource InputTextBox}"
@@ -147,8 +143,8 @@
                             </DataGrid>
 
                             <!-- Trigger Button for the Dialog -->
-                            <Button Content="Manage Items &amp; Images" 
-                                    Command="{Binding OpenEditDialogCommand}"
+                            <Button Content="Edit Basket" 
+                                    Command="{Binding EditBasketWindowCommand}"
                                     Margin="0,10,0,0" 
                                     Style="{StaticResource PageButton}"/>
 
