@@ -25,6 +25,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         private Order _selectedOrder;
 
         public ICommand EditBasketWindowCommand { get; }
+        public ICommand NewBasketCommand { get; }
 
         public ObservableCollection<Basket> AllBaskets { get; set; } = new ObservableCollection<Basket>();
         public List<Item> AllItems { get; set; } = new List<Item>();
