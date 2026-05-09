@@ -23,6 +23,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         private Basket _selectedBasket;
         private Item _selectedItem;
         private Order _selectedOrder;
+        private string _fullImagePath;
 
         public ICommand EditBasketWindowCommand { get; }
         public ICommand NewBasketCommand { get; }
@@ -53,7 +54,12 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             set
             {
                 _selectedBasket = value;
+                // Update the FullImagePath property whenever a new basket is selected.
+                // This will trigger the UI to update the displayed image accordingly.
+                if (value.ImagePath != null) { FullImagePath = value.ImagePath; }
                 OnPropertyChanged(nameof(SelectedBasket));
+
+                
             }
         }
 
@@ -67,6 +73,20 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         {
             get { return _selectedOrder; }
             set { _selectedOrder = value; OnPropertyChanged(nameof(SelectedOrder)); }
+        }
+
+
+        public string FullImagePath
+        {
+            get { return _fullImagePath; }
+            set
+            {
+                // This constructs the full image path by combining the base path (pack URI) with the relative image path provided by the selected basket's ImagePath property.
+                // Goes to the ConwyCafe.Shared project, looks for the image in the path specified by value (which is the ImagePath of the selected basket) and constructs a pack URI that can be used to display the image in the UI.
+                // Value will be Images/Baskets/Basket1.png for example, so the full path will be pack://application:,,,/ConwyCafe.Shared;component/Images/Baskets/Basket1.png
+                _fullImagePath = $"pack://application:,,,/ConwyCafe.Shared;component/{value}";
+                OnPropertyChanged(FullImagePath);
+            }
         }
 
 
@@ -89,7 +109,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         }
 
         public void OpenEditBasketWindow(object? obj)
-        {            
+        {
             if (SelectedBasket == null)
             {
                 MessageBox.Show("Please select a basket to edit.");
@@ -130,7 +150,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             try
             {
                 // A GET request to the API to get list of items and stores it in response (can loop through)
-                var response = await App.Http.GetFromJsonAsync<List<Item>>("/api/items"); 
+                var response = await App.Http.GetFromJsonAsync<List<Item>>("/api/items");
                 if (response != null)
                 {
                     AllItems.Clear(); // Clear the existing items in the observable collection before adding new ones to avoid duplicates.

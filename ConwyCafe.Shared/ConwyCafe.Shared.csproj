@@ -7,12 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Baskets\basket1.jpeg" />
+    <None Remove="Images\Baskets\basket2.jpg" />
+    <None Remove="Images\Baskets\basket3.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Net.Http.Json" Version="10.0.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\Baskets\" />
     <Folder Include="Images\Items\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Baskets\basket1.jpeg" />
+    <Resource Include="Images\Baskets\basket2.jpg" />
+    <Resource Include="Images\Baskets\basket3.png" />
   </ItemGroup>
 
 </Project>
