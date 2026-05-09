@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Conwy_Cafe_Admin_App.Utilities;
 using System.Windows.Input;
-using Conwy_Cafe_Admin_App.Utilities;
-using Conwy_Cafe_Admin_App.Views;
 
 
 namespace Conwy_Cafe_Admin_App.ViewModels
@@ -36,7 +30,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         {
             get { return _currentView; }
             // Notify the view that the CurrentView property has changed, allowing the UI to update accordingly (e.g., displaying the new view content)
-            set { _currentView = value; OnPropertyChanged(nameof(CurrentView));}
+            set { _currentView = value; OnPropertyChanged(nameof(CurrentView)); }
         }
 
         private void BasketsPage(object? obj)

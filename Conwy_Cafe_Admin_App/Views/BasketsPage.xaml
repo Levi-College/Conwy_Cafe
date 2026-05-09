@@ -123,15 +123,15 @@
                             </Grid>
            
                             <Label Content="Basket Preview Image:" Style="{StaticResource LabelStyle}"/>
-                            <WrapPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Border Height="150" Width="200" CornerRadius="5" Background="#252B33" Margin="0,5,0,15">
-                                    <Grid>
-                                        <Image Source="{Binding FullImagePath}" Stretch="UniformToFill"/>
-                                        
-                                        <!--<Image Source="pack://application:,,,/ConwyCafe.Shared;component/Images/Baskets/basket1.jpeg"/>-->
-                                    </Grid>
-                                </Border>
-                            </WrapPanel>
+                            <Border Height="150" Width="200" CornerRadius="5" Background="#252B33" Margin="0,5,0,15">
+                                <Grid>
+                                    <Image Source="{Binding FullImagePath}" Stretch="UniformToFill"/>
+                                </Grid>
+                            </Border>
+                            
+                            <!--<WrapPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                
+                            </WrapPanel>-->
 
                             <!-- Items Summary List -->
                             <Label Content="Included Items:" Style="{StaticResource LabelStyle}"/>

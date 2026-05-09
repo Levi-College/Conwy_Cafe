@@ -1,5 +1,4 @@
 using ConwyCafe.Shared.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Conwy_Cafe_Webpage.Pages
@@ -25,13 +24,13 @@ namespace Conwy_Cafe_Webpage.Pages
             {
                 // Call the API to get the baskets
                 var response = await _http.GetFromJsonAsync<List<Basket>>("https://localhost:7008/api/basket");
-               
+
 
                 if (response != null)
                 {
                     Baskets = response;
                 }
-              
+
             }
             catch (Exception ex)
             {

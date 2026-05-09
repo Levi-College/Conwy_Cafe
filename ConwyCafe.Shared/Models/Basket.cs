@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConwyCafe.Shared.Models
+﻿namespace ConwyCafe.Shared.Models
 {
     public enum BasketCategory // (0,1,2) for Breakfast, Lunch, Dinner
     {

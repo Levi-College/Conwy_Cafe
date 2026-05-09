@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Conwy_Cafe_Web_API.Data; // Getting the DbContext
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +34,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();

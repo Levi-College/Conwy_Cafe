@@ -22,7 +22,7 @@ namespace Conwy_Cafe_Web_API.Data
             // This is done as in the C# logic, an enum is used for categories while in the db, they are stored as strings (with constraints)
             modelBuilder.Entity<Basket>()
                 .Property(b => b.Category)
-                .HasConversion<string>(); 
+                .HasConversion<string>();
 
             // This is where you define the Composite Key for the BasketItems table
             modelBuilder.Entity<BasketItems>()

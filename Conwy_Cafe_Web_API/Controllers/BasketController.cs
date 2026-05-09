@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Conwy_Cafe_Web_API.Data;
+﻿using Conwy_Cafe_Web_API.Data;
 using ConwyCafe.Shared.Models; // Where your Basket class lives
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Conwy_Cafe_Web_API.Controllers
 {
@@ -60,7 +60,7 @@ namespace Conwy_Cafe_Web_API.Controllers
 
             // Update the existing basket's properties with the values from the updated basket
             // This only updates the properties of the existing basket, it does not update the related BasketItems, you would need to handle that separately if needed
-            _context.Entry(existingBasket).CurrentValues.SetValues(updatedBasket); 
+            _context.Entry(existingBasket).CurrentValues.SetValues(updatedBasket);
 
             //Updating the basket items table (b)
             _context.BasketItems.RemoveRange(existingBasket.BasketItems); // Remove existing BasketItems
@@ -84,7 +84,7 @@ namespace Conwy_Cafe_Web_API.Controllers
             }
             catch (Exception ex)
             {
-               return StatusCode(500, $"An error occurred while updating the basket: {ex.Message}"); // Return a 500 Internal Server Error with the exception message if an error occurs
+                return StatusCode(500, $"An error occurred while updating the basket: {ex.Message}"); // Return a 500 Internal Server Error with the exception message if an error occurs
             }
             //return BadRequest("Please retry");
             return Ok();

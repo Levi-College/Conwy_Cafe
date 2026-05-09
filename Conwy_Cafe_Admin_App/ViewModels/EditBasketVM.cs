@@ -149,7 +149,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             }
             set
             {
-                
+
             }
         }
 
@@ -206,14 +206,14 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             foreach (var basketItem in EditBasket.BasketItems)
             {
                 // Checks if it is in the list
-                if (itemIds.Contains(basketItem.ItemId)) 
+                if (itemIds.Contains(basketItem.ItemId))
                 { MessageBox.Show("Duplicate Items found"); return; } // stops the method if it is not unique
                 // If not add to the basket item ids list
                 itemIds.Add(basketItem.ItemId);
             }
 
             // Make a PUT request to the specified API endpoint to update the basket with the changes made in the EditBasket object. The response from the API is stored in the 'response' variable.
-            var response = await App.Http.PutAsJsonAsync($"/api/basket/{EditBasket.Id}", EditBasket); 
+            var response = await App.Http.PutAsJsonAsync($"/api/basket/{EditBasket.Id}", EditBasket);
 
             if (response.IsSuccessStatusCode) // Checks if the response indicates a successful status code (e.g., 200 OK). If the update was successful, it proceeds to close the edit window.
             {

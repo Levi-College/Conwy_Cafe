@@ -58,7 +58,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 // Update the FullImagePath property whenever a new basket is selected.
                 // This will trigger the UI to update the displayed image accordingly.
                 //if (value.ImagePath != null) { FullImagePath = value.ImagePath; }
-                OnPropertyChanged(nameof(SelectedBasket));                
+                OnPropertyChanged(nameof(SelectedBasket));
                 OnPropertyChanged(nameof(FullImagePath)); // Notify that the FullImagePath property has changed, which will trigger the UI to update the displayed image based on the new selected basket's ImagePath.
             }
         }
@@ -78,13 +78,20 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
         public string FullImagePath
         {
-            get {
+            get
+            {
                 // Use the null-conditional ?. to safely check if a basket exists
                 if (string.IsNullOrEmpty(SelectedBasket?.ImagePath)) return null;
-                var path = $"pack://application:,,,/ConwyCafe.Shared;component/{SelectedBasket.ImagePath}";
-                MessageBox.Show($"Loading Image: {path}");
+
+                //Old
+                //var path = $"pack://application:,,,/ConwyCafe.Shared;component/{SelectedBasket.ImagePath}";
+
+                // New (moved to API)
+                var path = $"https://localhost:7008/{SelectedBasket.ImagePath}";
+
+
                 return path;
-                
+
                 //return new Uri(path);
                 //return new Uri($"pack://application:,,,/ConwyCafe.Shared;component/{SelectedBasket.ImagePath}"); 
             }
