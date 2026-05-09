@@ -23,7 +23,8 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         private Basket _selectedBasket;
         private Item _selectedItem;
         private Order _selectedOrder;
-        private string _fullImagePath;
+        //private string _fullImageUri;
+
 
         public ICommand EditBasketWindowCommand { get; }
         public ICommand NewBasketCommand { get; }
@@ -56,10 +57,9 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 _selectedBasket = value;
                 // Update the FullImagePath property whenever a new basket is selected.
                 // This will trigger the UI to update the displayed image accordingly.
-                if (value.ImagePath != null) { FullImagePath = value.ImagePath; }
-                OnPropertyChanged(nameof(SelectedBasket));
-
-                
+                //if (value.ImagePath != null) { FullImagePath = value.ImagePath; }
+                OnPropertyChanged(nameof(SelectedBasket));                
+                OnPropertyChanged(nameof(FullImagePath)); // Notify that the FullImagePath property has changed, which will trigger the UI to update the displayed image based on the new selected basket's ImagePath.
             }
         }
 
@@ -78,15 +78,24 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
         public string FullImagePath
         {
-            get { return _fullImagePath; }
-            set
-            {
-                // This constructs the full image path by combining the base path (pack URI) with the relative image path provided by the selected basket's ImagePath property.
-                // Goes to the ConwyCafe.Shared project, looks for the image in the path specified by value (which is the ImagePath of the selected basket) and constructs a pack URI that can be used to display the image in the UI.
-                // Value will be Images/Baskets/Basket1.png for example, so the full path will be pack://application:,,,/ConwyCafe.Shared;component/Images/Baskets/Basket1.png
-                _fullImagePath = $"pack://application:,,,/ConwyCafe.Shared;component/{value}";
-                OnPropertyChanged(FullImagePath);
+            get {
+                // Use the null-conditional ?. to safely check if a basket exists
+                if (string.IsNullOrEmpty(SelectedBasket?.ImagePath)) return null;
+                var path = $"pack://application:,,,/ConwyCafe.Shared;component/{SelectedBasket.ImagePath}";
+                MessageBox.Show($"Loading Image: {path}");
+                return path;
+                
+                //return new Uri(path);
+                //return new Uri($"pack://application:,,,/ConwyCafe.Shared;component/{SelectedBasket.ImagePath}"); 
             }
+            //set
+            //{
+            //    // This constructs the full image path by combining the base path (pack URI) with the relative image path provided by the selected basket's ImagePath property.
+            //    // Goes to the ConwyCafe.Shared project, looks for the image in the path specified by value (which is the ImagePath of the selected basket) and constructs a pack URI that can be used to display the image in the UI.
+            //    // Value will be Images/Baskets/Basket1.png for example, so the full path will be pack://application:,,,/ConwyCafe.Shared;component/Images/Baskets/Basket1.png
+            //    _fullImagePath = $"pack://application:,,,/ConwyCafe.Shared;component/{value}";
+            //    OnPropertyChanged(nameof(FullImagePath));
+            //}
         }
 
 
