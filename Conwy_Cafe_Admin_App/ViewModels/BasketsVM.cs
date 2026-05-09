@@ -55,9 +55,6 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             set
             {
                 _selectedBasket = value;
-                // Update the FullImagePath property whenever a new basket is selected.
-                // This will trigger the UI to update the displayed image accordingly.
-                //if (value.ImagePath != null) { FullImagePath = value.ImagePath; }
                 OnPropertyChanged(nameof(SelectedBasket));
                 OnPropertyChanged(nameof(FullImagePath)); // Notify that the FullImagePath property has changed, which will trigger the UI to update the displayed image based on the new selected basket's ImagePath.
             }
@@ -83,26 +80,9 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 // Use the null-conditional ?. to safely check if a basket exists
                 if (string.IsNullOrEmpty(SelectedBasket?.ImagePath)) return null;
 
-                //Old
-                //var path = $"pack://application:,,,/ConwyCafe.Shared;component/{SelectedBasket.ImagePath}";
-
                 // New (moved to API)
-                var path = $"https://localhost:7008/{SelectedBasket.ImagePath}";
-
-
-                return path;
-
-                //return new Uri(path);
-                //return new Uri($"pack://application:,,,/ConwyCafe.Shared;component/{SelectedBasket.ImagePath}"); 
+                return $"https://localhost:7008/{SelectedBasket.ImagePath}";
             }
-            //set
-            //{
-            //    // This constructs the full image path by combining the base path (pack URI) with the relative image path provided by the selected basket's ImagePath property.
-            //    // Goes to the ConwyCafe.Shared project, looks for the image in the path specified by value (which is the ImagePath of the selected basket) and constructs a pack URI that can be used to display the image in the UI.
-            //    // Value will be Images/Baskets/Basket1.png for example, so the full path will be pack://application:,,,/ConwyCafe.Shared;component/Images/Baskets/Basket1.png
-            //    _fullImagePath = $"pack://application:,,,/ConwyCafe.Shared;component/{value}";
-            //    OnPropertyChanged(nameof(FullImagePath));
-            //}
         }
 
 
@@ -126,11 +106,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
         public void OpenEditBasketWindow(object? obj)
         {
-            if (SelectedBasket == null)
-            {
-                MessageBox.Show("Please select a basket to edit.");
-                return;
-            }
+            if (SelectedBasket == null) { MessageBox.Show("Please select a basket to edit."); return; }
             //Setting the datacontext
             var EditBasketVM = new EditBasketVM(SelectedBasket, AllItems);
             // This method would contain logic to open a new window for editing a basket. 
@@ -151,10 +127,8 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 if (response != null)
                 {
                     AllBaskets.Clear(); // Clear the existing baskets in the observable collection before adding new ones to avoid duplicates.
-                    foreach (var basket in response) // Iterate through each basket in the response (using .Result to get the result of the asynchronous operation).
-                    {
-                        AllBaskets.Add(basket); // Add each basket to the 'AllBaskets' observable collection.
-                    }
+                    // Iterate through each basket in the response (using .Result to get the result of the asynchronous operation).
+                    foreach (var basket in response) { AllBaskets.Add(basket); } // Add each basket to the 'AllBaskets' observable collection.
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
