@@ -1,5 +1,7 @@
 ﻿using Conwy_Cafe_Admin_App.Utilities;
 using ConwyCafe.Shared.Models;
+using System.IO;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Input;
@@ -25,25 +27,29 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 BasketItems = SelectedBasket.BasketItems.ToList()
             };
 
+            OnPropertyChanged(nameof(FullImagePath));
+
             AllItems = Items;
             LoadData();
 
             CancelUpdateCommand = new RelayCommand(execute: obj => CancelUpdate(obj as Window));
             SaveUpdateCommand = new RelayCommand(execute: obj => SaveUpdate(obj as Window));
+            ChangeImageCommand = new RelayCommand(ChangeImage);
         }
 
         // Declaring variables and collections
         private Basket _editBasket;
 
+        // Storing the items in separate lists based on their type (main, side, drink) for easier access and display in the UI. The AllItems list contains all the items, while the MainItems, SideItems, and DrinkItems lists contain only the items of their respective types.
+        // This categorisation allows for easier filtering and display of items in the UI, such as populating combo boxes or lists with the appropriate items based on their type.
         public List<Item> AllItems { get; set; } = new List<Item>();
         public List<Item> MainItems { get; set; } = new List<Item>();
         public List<Item> SideItems { get; set; } = new List<Item>();
         public List<Item> DrinkItems { get; set; } = new List<Item>();
 
-        //public Item BasketMainItem;
-        //public List<Item> BasketSideItems = new List<Item>();
-        //public Item BasketDrinkItem;
 
+        // Dictionaries to map enum values to display names for the UI. These dictionaries are used to provide user-friendly names for the BasketCategory and ItemType enums when displaying them in the UI, such as in combo boxes or labels.
+        // The keys of the dictionaries are the enum values, and the values are the corresponding display names that will be shown to the user.
         public Dictionary<BasketCategory, string> CategoryDisplayNames { get; } = new()
         {
             { BasketCategory.Meat, "Meat" },
@@ -62,6 +68,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
         public ICommand CancelUpdateCommand { get; set; }
         public ICommand SaveUpdateCommand { get; set; }
+        public ICommand ChangeImageCommand { get; set; }
 
         // Properties
         public Basket EditBasket
@@ -81,10 +88,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             {
                 // This goes through the basket items of the basket, checks the item (null check) and checks the item type.
                 // If the item type is main, it returns that item as the main slot. If no main item is found, it returns null.
-                foreach (var item in EditBasket.BasketItems)
-                {
-                    if (item.Item?.ItemType == ItemType.Main) { return item; }
-                }
+                foreach (var item in EditBasket.BasketItems) { if (item.Item?.ItemType == ItemType.Main) { return item; } }
                 return null;
             }
             set
@@ -109,10 +113,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             {
                 // This goes through the basket items of the basket, checks the item (null check) and checks the item type.
                 // If the item type is drink, it returns that item as the drink slot. If no drink item is found, it returns null.
-                foreach (var items in EditBasket.BasketItems)
-                {
-                    if (items.Item != null && items.Item.ItemType == ItemType.Drink) { return items; }
-                }
+                foreach (var items in EditBasket.BasketItems) { if (items.Item != null && items.Item.ItemType == ItemType.Drink) { return items; } }
                 return null;
             }
             set
@@ -141,18 +142,14 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 // This goes through the basket items of the basket, checks the item (null check) and checks the item type.
                 // If the item type is side, it adds that item to a list of side slots. It returns the list of side slots, which may contain 0 to 3 items depending on how many side items are in the basket.
                 List<BasketItems> sideSlots = new List<BasketItems>();
-                foreach (var item in EditBasket.BasketItems)
-                {
-                    if (item.Item != null && item.Item.ItemType == ItemType.Side) { sideSlots.Add(item); }
-                }
+                foreach (var item in EditBasket.BasketItems) { if (item.Item != null && item.Item.ItemType == ItemType.Side) { sideSlots.Add(item); } }
                 return sideSlots;
             }
-            set
-            {
 
-            }
         }
 
+        // This method is used to retrieve the list of side items from the basket. It goes through the basket items of the basket, checks the item (null check) and checks the item type.
+        // IEnumerable means that it returns a collection of items that can be enumerated (e.g., using a foreach loop). It returns a list of side items, which may contain 0 to 3 items depending on how many side items are in the basket.
         public IEnumerable<BasketItems> GetSideSlots()
         {
             List<BasketItems> sideSlots = new List<BasketItems>();
@@ -163,13 +160,27 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             return sideSlots;
         }
 
+        // These properties are used to bind the three side slots in the UI to the corresponding items in the basket.
+        // They use the GetSideSlots method to retrieve the list of side items and return the item at the corresponding index (0 for the first side slot, 1 for the second, and 2 for the third).
+        // If there are not enough side items in the basket, it returns null for the remaining slots.
         public BasketItems SideSlot1 => GetSideSlots().ElementAtOrDefault(0);
         public BasketItems SideSlot2 => GetSideSlots().ElementAtOrDefault(1);
         public BasketItems SideSlot3 => GetSideSlots().ElementAtOrDefault(2);
 
+        public string FullImagePath
+        {
+            get
+            {
+                // Checks if the imagepath is empty
+                if (string.IsNullOrEmpty(EditBasket?.ImagePath)) { return null; }
+                // Gets the updated (actual basket image path)
+                else { return $"https://localhost:7008/{EditBasket.ImagePath}"; }
+            }
+        }
 
-        //Methods
         // Methods
+        // Simple helper class for the JSON response
+        public class UploadResponse { public string NewPath { get; set; } }
         public async void LoadData()
         {
             // Waits for the data of baskets and categories to be loaded before proceeding. This ensures that the necessary data is available for the view model to function properly, such as populating the UI with the retrieved baskets and categories.
@@ -223,85 +234,8 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                     editWindow.Close(); // Close the edit window
                 }
             }
-            else
-            {
-                MessageBox.Show("Failed to save: " + response.ReasonPhrase); // If the update was not successful, it displays an error message with the reason for the failure.
-            }
-
-
-
-            //// Check if the items are valid (uniqe main, max 3 sides, unique drink)
-            //foreach (var basketItem in EditBasket.BasketItems)
-            //{
-            //    // Checks if the item is not null
-            //    if (basketItem.Item != null)
-            //    {
-            //        // Checks the item type and applies the corresponding validation rules:
-            //        if (basketItem.Item.ItemType == ItemType.Main)
-            //        {
-            //            if (MainSlot != null && MainSlot.ItemId != basketItem.ItemId)
-            //            {
-            //                MessageBox.Show("Invalid basket: Multiple main items detected.");
-            //                return;
-            //            }
-            //        }
-            //        else if (basketItem.Item.ItemType == ItemType.Side)
-            //        {
-            //            // Getting the number of sides
-            //            int sideCount = EditBasket.BasketItems.Count();
-            //            if (sideCount > 3)
-            //            {
-            //                MessageBox.Show("Invalid basket: More than 3 side items detected.");
-            //                return;
-            //            }
-            //        }
-            //        else if (basketItem.Item.ItemType == ItemType.Drink)
-            //        {
-            //            if (DrinkSlot != null && DrinkSlot.ItemId != basketItem.ItemId)
-            //            {
-            //                MessageBox.Show("Invalid basket: Multiple drink items detected.");
-            //                return;
-            //            }
-            //        }
-            //    }
-            //}
-
-            //for (int i = 0; i < MainItems.Count; i++)
-            //{
-            //    if (MainSlot != null && MainSlot.ItemId == MainItems[i].Id)
-            //    {
-            //        MainSlot.Item = MainItems[i];
-            //    }
-            //}
-
-            //for (int i = 0; i < SideItems.Count; i++)
-            //{
-            //    for (int j = 0; j < SideSlots.Count(); j++)
-            //    {
-            //        if (SideSlots.ElementAt(j) != null && SideSlots.ElementAt(j).ItemId == SideItems[i].Id)
-            //        {
-            //            SideSlots.ElementAt(j).Item = SideItems[i];
-            //        }
-            //    }
-            //}
-
-
-            //try
-            //{
-            //    // Call API to save the basket
-            //    // await ....UpdateBasket(EditBasket);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Failed to save: " + ex.Message);
-            //}
-            //if (editWindow != null)
-            //{
-            //    // Setting DialogResult to true tells the calling code
-            //    // "The user is happy, go ahead and save this to the API!"
-            //    editWindow.DialogResult = true;
-            //    //editWindow.Close();
-            //}
+            // If the update was not successful, it displays an error message with the reason for the failure.
+            else { MessageBox.Show("Failed to save: " + response.ReasonPhrase); }
         }
 
         // To cancel the changes made and revert to the original state.
@@ -314,5 +248,52 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 editWindow.Close(); // Close the edit window
             }
         }
+
+        private async void ChangeImage(object? obj)
+        {
+            await ExecuteChangeImage();
+        }
+
+        private async Task ExecuteChangeImage()
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.webp",
+                Title = "Select New Basket Image"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    using var content = new MultipartFormDataContent();
+                    var fileStream = File.OpenRead(openFileDialog.FileName);
+                    var fileContent = new StreamContent(fileStream);
+
+                    // "file" name must match the API parameter name
+                    content.Add(fileContent, "file", Path.GetFileName(openFileDialog.FileName));
+
+                    // Use PUT to signify an update/replacement
+                    var response = await App.Http.PutAsync($"/api/basket/{EditBasket.Id}/update-image", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var result = await response.Content.ReadFromJsonAsync<UploadResponse>();
+
+                        // Update the model path (e.g., Images/Baskets/basket_5_6385.jpg)
+                        EditBasket.ImagePath = result.NewPath;
+
+                        // Refresh the UI preview
+                        OnPropertyChanged(nameof(FullImagePath));
+                    }
+                    else { MessageBox.Show("Failed to upload image to server."); }
+                }
+                catch (Exception ex) { MessageBox.Show($"Error: {ex.Message}"); }
+            }
+        }
+
+        
+
+
     }
 }

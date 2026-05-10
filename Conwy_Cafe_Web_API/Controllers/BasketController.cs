@@ -90,5 +90,53 @@ namespace Conwy_Cafe_Web_API.Controllers
             return Ok();
         }
 
+
+        // Updating the image of a basket, the id of the basket and the file are sent
+        [HttpPut("{id}/update-image")]
+        public async Task<IActionResult> UpdateImage(int id, IFormFile file)
+        {
+            var basket = await _context.Baskets.FindAsync(id);
+            if (basket == null || file == null) return NotFound();
+
+            // 1. Setup Folders (wwwroot/ Images/Baskets
+            string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            string folderPath = Path.Combine(rootPath, "images", "baskets");
+
+            // If it does not exist, create one (in the directory)
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
+            // 2. Capture Old Path to delete later
+            string oldRelativePath = basket.ImagePath;
+
+            // 3. Create Unique New Name (Prevents Caching)
+            string extension = Path.GetExtension(file.FileName);
+            string newFileName = $"basket_{id}_{DateTime.Now.Ticks}{extension}"; // A default value for the image
+            string newRelativePath = $"images/baskets/{newFileName}";
+            string newFullPath = Path.Combine(rootPath, newRelativePath);
+
+            // 4. Save New File
+            using (var stream = new FileStream(newFullPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Changing the value in the database and saving it
+            basket.ImagePath = newRelativePath;
+            await _context.SaveChangesAsync();
+
+            // 6. Cleanup: Delete Old File
+            if (!string.IsNullOrEmpty(oldRelativePath))
+            {
+                string oldFullPath = Path.Combine(rootPath, oldRelativePath.TrimStart('/'));
+                if (System.IO.File.Exists(oldFullPath))
+                {
+                    try { System.IO.File.Delete(oldFullPath); }
+                    catch { /* Log error but don't stop the request */ }
+                }
+            }
+
+            return Ok(new { NewPath = newRelativePath });
+        }
+
     }
 }
