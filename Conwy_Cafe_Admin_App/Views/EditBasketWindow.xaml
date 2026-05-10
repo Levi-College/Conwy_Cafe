@@ -59,9 +59,9 @@
                         </Image>
 
                         <!-- Placeholder text if no image exists -->
-                        <TextBlock Text="No Image Available"                        Foreground="#555" 
-                                   VerticalAlignment="Center"                                    HorizontalAlignment="Center"
-                                   Visibility="{Binding FullImagePath}"/>
+                        <!--<TextBlock Text="No Image Available" Foreground="#555" 
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Visibility="{Binding FullImagePath}"/>-->
                     </Grid>
                 </Border>
 
@@ -89,8 +89,6 @@
                 <StackPanel>
                     <TextBlock Text="Main Course" Foreground="#3498DB" FontSize="12" Margin="0,5"/>
                     <DockPanel LastChildFill="True">
-                        <!--<Button Content="Swap" Click="SwapMain_Click" DockPanel.Dock="Right" Width="60" Margin="10,0,0,0"/>-->
-                        <!--<TextBlock Text="{Binding MainItem.Name, TargetNullValue='No Main Selected'}" VerticalAlignment="Center" Foreground="White"/>-->
                         <ComboBox ItemsSource="{Binding MainItems }" 
                                   Style="{StaticResource ModernComboBoxStyle}"
                                   SelectedValue="{Binding MainSlot.ItemId, UpdateSourceTrigger=PropertyChanged}"
@@ -130,6 +128,7 @@
                 <Button Content="Cancel" Command="{Binding CancelUpdateCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Padding="10"/>
                 <Button Content="Save Changes" Command="{Binding SaveUpdateCommand}"  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Background="#2ECC71" Foreground="White" Margin="5" Padding="10"/>
             </UniformGrid>
+            
         </StackPanel>
     </ScrollViewer>
 </Window>

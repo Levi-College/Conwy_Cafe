@@ -4,37 +4,67 @@
     ViewData["Title"] = "Conwy Cafe";
 }
 
-<div class="text-center">
+@* <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div> *@
+
+
+<div class="container py-5">
+    <h2 class="text-white mb-4">Our Special Baskets</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var basket in Model.Baskets)
+        {
+            <div class="col">
+                <div class="card h-100 basket-card">
+                    <div class="basket-image-container">
+                        @if (!string.IsNullOrEmpty(basket.ImagePath))
+                        {
+                            <img src="/@basket.ImagePath.TrimStart('/')" 
+                                 class="card-img-top" 
+                                 alt="@basket.Name"
+                                 asp-append-version="true">
+                        }
+                        else
+                        {
+                            <div class="no-image-placeholder">No Image Available</div>
+                        }
+                        <div class="price-badge">@basket.Price.ToString()</div>
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-white">@basket.Name</h5>
+                        <p class="card-text text-muted flex-grow-1">
+                            @(basket.Description?.Length > 100 ? basket.Description.Substring(0, 100) + "..." : basket.Description)
+                        </p>
+                        
+                        <div class="mt-auto pt-3">
+                            <span class="badge rounded-pill bg-sage-outline">@basket.Category</span>
+                            <a asp-page="/BasketDetails" asp-route-id="@basket.Id" class="btn btn-primary btn-sm float-end">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
 
-
-@* <form method="post">
-    <input type="number" name="num1" step="any" placeholder="First Number" /> +
-    <input type="number" name="num2" step="any" placeholder="Second Number" />
-    <button type="submit">Calculate via API</button>
-</form>
-
-@if (!string.IsNullOrEmpty(Model.DisplayResult))
-{
-    <h3 style="color: green;">@Model.DisplayResult</h3>
-} *@
-
-@foreach (var basket in Model.Baskets)
+@* @foreach (var basket in Model.Baskets)
 {
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">Basket ID: @basket.Id</h5>
             <p class="card-text">Basket Name: @basket.Name</p>
             <p class="card-text">Total Price: @basket.Price.ToString()</p>
-            <p class="card-text">Items:</p>
+            <p class="card-text">Items:</p> *@
             @* <ul>
                 @foreach (var item in basket)
                 {
                     <li>@item.Name - Quantity: @item.Quantity, Price: @item.Price.ToString("C")</li>
                 }
             </ul> *@
-        </div>
+ @*        </div>
     </div>
-}
+} *@

@@ -95,43 +95,44 @@ namespace Conwy_Cafe_Web_API.Controllers
         [HttpPut("{id}/update-image")]
         public async Task<IActionResult> UpdateImage(int id, IFormFile file)
         {
-            var basket = await _context.Baskets.FindAsync(id);
-            if (basket == null || file == null) return NotFound();
+            var basket = await _context.Baskets.FindAsync(id); // Find the basket with the given id in the database
+            if (basket == null || file == null) return NotFound(); // Null check
 
-            // 1. Setup Folders (wwwroot/ Images/Baskets
+            // Setup Folders (wwwroot/ Images/Baskets). Gets the current directory of the application, combines it with "wwwroot" to get the path to the wwwroot folder, then combines that with "images/baskets" to get the path to the folder where the basket images will be stored (e.g., C:\Projects\ConwyCafe\wwwroot\images\baskets)
             string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
             string folderPath = Path.Combine(rootPath, "images", "baskets");
 
             // If it does not exist, create one (in the directory)
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
-            // 2. Capture Old Path to delete later
+            // Capture Old Path to delete later (stored in the database)
             string oldRelativePath = basket.ImagePath;
 
-            // 3. Create Unique New Name (Prevents Caching)
-            string extension = Path.GetExtension(file.FileName);
+            // .Ticks is used to create a unqique name for the file, this is because if two files have the same name, they will overwrite each other, so using the current time in ticks ensures that each file has a unique name
+            string extension = Path.GetExtension(file.FileName); // Get the file extension from the original file name
             string newFileName = $"basket_{id}_{DateTime.Now.Ticks}{extension}"; // A default value for the image
-            string newRelativePath = $"images/baskets/{newFileName}";
-            string newFullPath = Path.Combine(rootPath, newRelativePath);
+            string newRelativePath = $"images/baskets/{newFileName}"; // The relative path to be stored in the database, this is the path that will be used to access the image from the web application (e.g., /images/baskets/basket_1_637654321012345678.jpg)
+            string newFullPath = Path.Combine(rootPath, newRelativePath); // The full path to save the file on the server, this is the actual location on the server's file system where the image will be stored (e.g., C:\Projects\ConwyCafe\wwwroot\images\baskets\basket_1_637654321012345678.jpg)
 
-            // 4. Save New File
+            // Save New File
+            //
             using (var stream = new FileStream(newFullPath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                await file.CopyToAsync(stream); // Copy the uploaded file to the new location on the server (newFullPath) (async used to avoid blocking the thread while the file is being saved)
             }
 
             // Changing the value in the database and saving it
             basket.ImagePath = newRelativePath;
             await _context.SaveChangesAsync();
 
-            // 6. Cleanup: Delete Old File
+            // Deleting the old file if it exists (if there is an old image, delete it from the directory)
             if (!string.IsNullOrEmpty(oldRelativePath))
             {
                 string oldFullPath = Path.Combine(rootPath, oldRelativePath.TrimStart('/'));
                 if (System.IO.File.Exists(oldFullPath))
                 {
                     try { System.IO.File.Delete(oldFullPath); }
-                    catch { /* Log error but don't stop the request */ }
+                    catch (Exception ex) { Console.WriteLine($"Failed to delete old image: {ex.Message}"); } 
                 }
             }
 

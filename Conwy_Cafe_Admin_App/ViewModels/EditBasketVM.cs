@@ -180,6 +180,8 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
         // Methods
         // Simple helper class for the JSON response
+        // This is used to deserialize the JSON response from the server after uploading a new image for the basket. The server is expected to return a JSON object that contains a property (NewPath) which holds the new image path after a successful upload.
+        // This class allows us to easily access that new image path in our code after deserializing the response.
         public class UploadResponse { public string NewPath { get; set; } }
         public async void LoadData()
         {
@@ -266,8 +268,14 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             {
                 try
                 {
+                    // Variable content is used to create a multipart form data content that will be sent in the HTTP request to upload the new image for the basket.
+                    // It allows us to include the file content (the selected image) in the request body when making the PUT request to update the basket's image on the server.
                     using var content = new MultipartFormDataContent();
+                    // Open the selected file and create a StreamContent to include in the multipart form data content.
+                    // The file stream is created by opening the selected file using File.OpenRead, and the StreamContent is created using that file stream.
                     var fileStream = File.OpenRead(openFileDialog.FileName);
+                    // The StreamContent is added to the multipart form data content with the name "file" (which must match the API parameter name) and the file name of the selected image.
+                    // StreamContent is a type of HttpContent that allows us to send a stream of data (in this case, the image file) in the HTTP request. By adding it to the multipart form data content, we can include the image file in the request body when making the PUT request to update the basket's image on the server.
                     var fileContent = new StreamContent(fileStream);
 
                     // "file" name must match the API parameter name
@@ -278,6 +286,8 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
                     if (response.IsSuccessStatusCode)
                     {
+                        // Read the JSON response from the server and deserialize it into an UploadResponse object.
+                        // The UploadResponse class is a simple helper class that contains a property (NewPath) to hold the new image path returned by the server after a successful upload.
                         var result = await response.Content.ReadFromJsonAsync<UploadResponse>();
 
                         // Update the model path (e.g., Images/Baskets/basket_5_6385.jpg)

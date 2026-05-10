@@ -1,22 +1,92 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+:root {
+    --primary-green: #5d6d4e; /* Sage Green */
+    --light-sage: #8fa382;
+    --cream-bg: #fdfaf5; /* Warm Cream */
+    --deep-forest: #2c3624;
+    --accent-gold: #c5a059;
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: var(--cream-bg);
+    color: var(--deep-forest);
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 0; /* Removing fixed footer margin for a cleaner look */
 }
+
+/* Typography */
+.logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-green) !important;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 2px solid #e9e2d8;
+}
+
+.nav-link {
+    color: var(--deep-forest) !important;
+    font-weight: 500;
+    margin: 0 10px;
+}
+
+    .nav-link:hover {
+        color: var(--primary-green) !important;
+    }
+
+/* Basket Cards Overhaul */
+.basket-card {
+    background: #ffffff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(93, 109, 78, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .basket-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(93, 109, 78, 0.2);
+    }
+
+.price-badge {
+    background: var(--primary-green);
+    color: white;
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 0 12px 0 12px; /* Curves to match card corner */
+}
+
+.bg-sage {
+    background-color: var(--primary-green);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--deep-forest);
+    color: #e9e2d8;
+    margin-top: 50px;
+}
+
+.footer-link {
+    color: var(--light-sage);
+    text-decoration: none;
+}
+
+    .footer-link:hover {
+        color: white;
+        text-decoration: underline;
+    }
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+    .btn-primary:hover {
+        background-color: var(--deep-forest);
+        border-color: var(--deep-forest);
+    }

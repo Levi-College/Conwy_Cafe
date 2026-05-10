@@ -10,6 +10,8 @@
     <Content Remove="wwwroot\images\baskets\basket1.jpeg" />
     <Content Remove="wwwroot\images\baskets\basket2.jpg" />
     <Content Remove="wwwroot\images\baskets\basket3.png" />
+    <Content Remove="wwwroot\images\baskets\basket4.jpg" />
+    <Content Remove="wwwroot\images\baskets\basket_3_639140164759548087.webp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +31,10 @@
     </Resource>
     <Resource Include="wwwroot\images\baskets\basket2.jpg" />
     <Resource Include="wwwroot\images\baskets\basket3.png" />
+    <Resource Include="wwwroot\images\baskets\basket4.jpg" />
+    <Resource Include="wwwroot\images\baskets\basket_3_639140164759548087.webp">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
