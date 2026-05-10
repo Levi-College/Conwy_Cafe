@@ -2,6 +2,7 @@
 {
     public class OrderItems
     {
+        public int Id { get; set; }
         public int ItemId { get; set; } // Foreign key to Item
         public int OrderBasketId { get; set; } // Foreign key to OrderBaskets
         public string ItemName { get; set; } // Name of the item at the time of order

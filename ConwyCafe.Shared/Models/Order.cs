@@ -6,7 +6,7 @@
         public string CustomerName { get; set; }
         public string CustomerEmail { get; set; }
         public string PhoneNumber { get; set; }
-        public DateTime CreatedDate { get; set; } = default(DateTime);
+        public DateTime OrderDate { get; set; } = default(DateTime);
         public decimal TotalAmount { get; set; }
     }
 }

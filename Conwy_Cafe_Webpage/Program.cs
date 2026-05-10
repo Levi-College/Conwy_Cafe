@@ -2,7 +2,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddHttpClient(); // Add this line to register HttpClient for dependency injection
+// Add this line to register HttpClient for dependency injection
+builder.Services.AddHttpClient("CafeAPI", client => {
+    client.BaseAddress = new Uri("https://localhost:7008/"); // Set the base address for the API
+})
+; 
 
 // For sessions (used for the cart)
 builder.Services.AddDistributedMemoryCache();
@@ -14,6 +18,7 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

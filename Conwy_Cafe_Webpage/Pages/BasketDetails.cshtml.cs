@@ -12,7 +12,7 @@ namespace Conwy_Cafe_Webpage.Pages
 
         public BasketDetailsModel(IHttpClientFactory factory)
         {
-            _http = factory.CreateClient();
+            _http = factory.CreateClient("CafeAPI");
         }
 
         public Basket Basket { get; set; }
@@ -22,7 +22,7 @@ namespace Conwy_Cafe_Webpage.Pages
         {
             // Fetch the specific basket from your API
             // Make sure your API endpoint supports /api/basket/{id}
-            var response = await _http.GetFromJsonAsync<Basket>($"https://localhost:7008/api/basket/{id}");
+            var response = await _http.GetFromJsonAsync<Basket>($"api/basket/{id}");
 
             if (response == null) return NotFound();
 
@@ -34,7 +34,7 @@ namespace Conwy_Cafe_Webpage.Pages
         public async Task<IActionResult> OnPostAsync(int id, int peopleCount, int quantity)
         {
             // Getting the basket details
-            var basket = await _http.GetFromJsonAsync<Basket>($"https://localhost:7008/api/basket/{id}");
+            var basket = await _http.GetFromJsonAsync<Basket>($"api/basket/{id}");
             if (basket == null) return NotFound();
 
             // Get existing cart from Session or create new list (if it doesn't exist) (??)

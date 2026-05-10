@@ -11,7 +11,7 @@ namespace Conwy_Cafe_Webpage.Pages
 
         public IndexModel(ILogger<IndexModel> logger, IHttpClientFactory factory)
         {
-            _http = factory.CreateClient();
+            _http = factory.CreateClient("CafeAPI");
             _logger = logger;
         }
 
@@ -23,7 +23,7 @@ namespace Conwy_Cafe_Webpage.Pages
             try
             {
                 // Call the API to get the baskets
-                var response = await _http.GetFromJsonAsync<List<Basket>>("https://localhost:7008/api/basket");
+                var response = await _http.GetFromJsonAsync<List<Basket>>("api/basket");
 
 
                 if (response != null)
