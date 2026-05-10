@@ -21,7 +21,7 @@
     <div class="row g-5">
         <div class="col-md-6">
             <div class="details-image-wrapper shadow-sm">
-                <img src="/@Model.Basket.ImagePath?.TrimStart('/')" class="img-fluid rounded" alt="@Model.Basket.Name">
+                <img src="https://localhost:7008/@Model.Basket.ImagePath?.TrimStart('/')" class="img-fluid rounded" alt="@Model.Basket.Name">
             </div>
         </div>
 
@@ -45,6 +45,24 @@
             </div>
 
             <form method="post">
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <label class="form-label fw-bold">Number of People</label>
+                        <select name="peopleCount" class="form-select shadow-sm">
+                            @for (int i = 2; i <= 5; i++)
+                            {
+                                <option value="@i">@i People</option>
+                            }
+                        </select>
+                        <small class="text-muted">Min 2 - Max 5 per basket</small>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label fw-bold">How many Baskets?</label>
+                        <input type="number" name="quantity" value="1" min="1" class="form-select shadow-sm" />
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow">
                     Add to Cart
                 </button>

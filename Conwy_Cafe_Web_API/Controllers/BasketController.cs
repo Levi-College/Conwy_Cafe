@@ -37,6 +37,18 @@ namespace Conwy_Cafe_Web_API.Controllers
             return await query.ToListAsync();
         }
 
+        // To get the details of an individual basket, the id of the basket is sent (api/baskets/1)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Basket>> GetBasket(int id)
+        {
+            // Getting the basket with the given id from the database, including its related BasketItems and their related Items to get all the details
+            var basket = await _context.Baskets
+                .Include(b => b.BasketItems) // Include related BasketItems
+                .ThenInclude(bi => bi.Item) // Include the related Item for each BasketItem
+                .FirstOrDefaultAsync(b => b.Id == id); // Get the first basket that matches the given id or return null if no match is found
+            if (basket == null) { return NotFound("Basket not found."); } // Check if the basket exists, if it does not exist, return a not found error
+            return basket; // Return the basket details
+        }
 
         //Updating/Saving a basket of which the id is sent
         [HttpPut("{id}")]
