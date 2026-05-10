@@ -20,10 +20,11 @@
                     <div class="basket-image-container">
                         @if (!string.IsNullOrEmpty(basket.ImagePath))
                         {
-                            <img src="/@basket.ImagePath.TrimStart('/')" 
-                                 class="card-img-top" 
+                            @* Adding a prefix for the API image folder root https://localhost:7008/ *@
+                            <img src="https://localhost:7008/@basket.ImagePath.TrimStart('/')"
+                                 class="card-img-top"
                                  alt="@basket.Name"
-                                 asp-append-version="true">
+                                 asp-append-version="true" />
                         }
                         else
                         {
