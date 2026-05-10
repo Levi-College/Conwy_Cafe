@@ -4,6 +4,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddHttpClient(); // Add this line to register HttpClient for dependency injection
 
+// For sessions (used for the cart)
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Make the session cookie HTTP only
+    options.Cookie.IsEssential = true; // Make the session cookie essential
+});
 
 var app = builder.Build();
 
@@ -16,7 +24,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); //Used to serve static files (like images, CSS, JavaScript) from the wwwroot folder, this is necessary for the images to be displayed on the web application
+app.UseSession(); // Enable session middleware to use sessions in the application, this should be placed before UseRouting and UseAuthorization to ensure that session data is available for those middlewares and the Razor Pages that require it
 
 app.UseRouting();
 

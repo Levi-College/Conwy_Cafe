@@ -1,10 +1,4 @@
-﻿@* @page
-@model Conwy_Cafe_Webpage.Pages.BasketDetailsModel
-@{
-}
- *@
-
-@page "{id:int}"
+﻿@page "{id:int}"
 @model Conwy_Cafe_Webpage.Pages.BasketDetailsModel
 @{
     ViewData["Title"] = Model.Basket.Name;
@@ -20,53 +14,63 @@
 
     <div class="row g-5">
         <div class="col-md-6">
-            <div class="details-image-wrapper shadow-sm">
-                <img src="https://localhost:7008/@Model.Basket.ImagePath?.TrimStart('/')" class="img-fluid rounded" alt="@Model.Basket.Name">
+            <div class="details-image-wrapper shadow-sm overflow-hidden rounded">
+                <img src="https://localhost:7008/@Model.Basket.ImagePath?.TrimStart('/')"
+                     class="img-fluid"
+                     alt="@Model.Basket.Name"
+                     style="min-height: 400px; object-fit: cover;">
             </div>
         </div>
 
         <div class="col-md-6">
-            <h1 class="display-5 fw-bold mb-3">@Model.Basket.Name</h1>
-            <h2 class="text-primary-green mb-4">@Model.Basket.Price.ToString()</h2>
+            <h1 class="display-5 fw-bold mb-3 text-sage">@Model.Basket.Name</h1>
             
-            <p class="lead mb-5 text-muted">@Model.Basket.Description</p>
+            <div class="mb-4">
+                <h2 class="text-primary-green d-inline">£@Model.Basket.Price.ToString()</h2>
+            </div>
+            
+            <p class="lead mb-4 text-muted">@Model.Basket.Description</p>
 
-            <div class="items-included p-4 rounded mb-4" style="background-color: #f1f3ef;">
-                <h5 class="mb-3 fw-bold">What's Inside:</h5>
-                <ul class="list-unstyled">
+            <div class="items-included p-4 rounded-3 mb-4 shadow-sm" style="background-color: #f8f9f6; border-left: 5px solid var(--primary-green);">
+                <h5 class="mb-3 fw-bold"><i class="bi bi-basket3 me-2"></i>What's Inside:</h5>
+                <ul class="list-unstyled mb-0">
                     @foreach (var bi in Model.Basket.BasketItems)
                     {
-                        <li class="mb-2">
-                            <i class="bi bi-check-circle-fill text-sage me-2"></i>
-                            <strong>@bi.Item.ItemType:</strong> @bi.Item.Name
+                        <li class="mb-2 d-flex align-items-center">
+                            <span class="badge bg-sage me-2" style="width: 60px;">@bi.Item.ItemType</span>
+                            <span class="text-dark">@bi.Item.Name</span>
                         </li>
                     }
                 </ul>
             </div>
 
-            <form method="post">
+            <form method="post" class="p-4 rounded-3 bg-white border shadow-sm">
                 <div class="row mb-4">
-                    <div class="col-6">
-                        <label class="form-label fw-bold">Number of People</label>
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <label class="form-label fw-bold">People in this Basket</label>
                         <select name="peopleCount" class="form-select shadow-sm">
-                            @for (int i = 2; i <= 5; i++)
-                            {
-                                <option value="@i">@i People</option>
-                            }
+                            <option value="2" selected>2 People (£@Model.Basket.Price)</option>
+                            <option value="3">3 People (£@(Model.Basket.Price + Model.Basket.ExtraPricePerPerson))</option>
+                            <option value="4">4 People (£@(Model.Basket.Price + (2*Model.Basket.ExtraPricePerPerson)))</option>
                         </select>
-                        <small class="text-muted">Min 2 - Max 5 per basket</small>
+                        <small class="text-muted">Base price covers 2 people.</small>
                     </div>
 
-                    <div class="col-6">
-                        <label class="form-label fw-bold">How many Baskets?</label>
-                        <input type="number" name="quantity" value="1" min="1" class="form-select shadow-sm" />
+                    <div class="col-sm-6">
+                        <label class="form-label fw-bold">Number of Baskets</label>
+                        <input type="number" name="quantity" value="1" min="1" class="form-control shadow-sm" />
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow">
-                    Add to Cart
+                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-sm fw-bold">
+                    Add to Selection
                 </button>
             </form>
+
+            <p class="text-center text-muted mt-3 small">
+                <i class="bi bi-info-circle me-1"></i>
+                Need to feed more than 2? Increase the "Number of Baskets" above.
+            </p>
         </div>
     </div>
 </div>
