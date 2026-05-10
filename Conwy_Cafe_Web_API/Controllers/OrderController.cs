@@ -7,7 +7,7 @@ namespace Conwy_Cafe_Web_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderController
+    public class OrderController : ControllerBase
     {
         private readonly AppDbContext _context;
 
@@ -51,42 +51,51 @@ namespace Conwy_Cafe_Web_API.Controllers
                     BasketName = b.Name,
                     BasketPrice = b.BasePrice,
                     Quantity = b.Quantity, // This is the number of times the user wants to order this basket (e.g. 2x Family Feast)
-                   
+
                     NumberOfPeople = b.PeopleCount // This is the total number of people
                 };
+
+                // Adding the OrderBasket to the table
                 _context.OrderBaskets.Add(orderBasket);
                 await _context.SaveChangesAsync();
 
-                // 3. Fetch the original Basket template to find which items belong in it
+                // Fetch the original Basket to find which items belong in it
                 var basketTemplate = await _context.Baskets
-                    .Include(x => x.BasketItems)
-                    .FirstOrDefaultAsync(x => x.Id == b.BasketId);
+                    .Include(x => x.BasketItems) // Gets all the items related to the baskets 
+                    .ThenInclude(bi => bi.Item) // Gets the Item properties
+                    .FirstOrDefaultAsync(x => x.Id == b.BasketId); // WHERE ID = BasketID
 
                 if (basketTemplate != null)
                 {
+                    // Getting the items in the basket items list
                     foreach (var bi in basketTemplate.BasketItems)
                     {
                         // Logic: 1-3-1 rule. Sides (3), Main/Drink (1).
-                        // We multiply by NumberOfPeople (either 2 or 3 in your logic)
-                        int baseQtyPerPerson = bi.Item.ItemType == ItemType.Side ? 3 : 1;
+                        // A variable is used to set the number of items (if side qty = 3 else 1)
+                        //int qty = 0;
+                        //if (bi.Item?.ItemType != ItemType.Side) { qty = 1; }
+                        //else { qty = 3; }
+                        //int baseQtyPerPerson = bi.Item.ItemType == ItemType.Side ? 3 : 1;
 
-                        var orderItem = new OrderItem
+                        var orderItem = new OrderItems
                         {
                             OrderBasketId = orderBasket.Id,
-                            ItemID = bi.ItemId,
-                            // (Base Qty * People) * Number of Baskets ordered
-                            Quantity = (baseQtyPerPerson * b.NumberOfPeople) * b.Qty
+                            ItemId = bi.ItemId,
+                            // Quantity is based on the number of people in the order. Already calculated when the order is sent from the website
+                            Quantity = b.PeopleCount
                         };
+                        
                         _context.OrderItems.Add(orderItem);
                     }
                 }
+
             }
 
             await _context.SaveChangesAsync();
 
             // Return the ID so the webpage can show "Order #1234 Placed!"
             return Ok(order.Id.ToString());
-        }
 
+        }
     }
 }

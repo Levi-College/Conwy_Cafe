@@ -7,11 +7,11 @@
         public string Name { get; set; }
         public int PeopleCount { get; set; } // 1 or 2
         public int Quantity { get; set; }    // Number of baskets
-        public decimal BasePrice { get; set; }
-        public decimal ExtraPrice { get; set; }
+        public decimal BasePrice { get; set; } // Holds the base price of the basket
+        public decimal ExtraPrice { get; set; } // Holds the cost of extra person
 
         // Base price covers the cost of 2 people, if there are more than 2 people, we add the extra price for each additional person
-        public decimal ItemPrice
+        public decimal ItemPrice // Cart Item Price 
         {
             get
             {
