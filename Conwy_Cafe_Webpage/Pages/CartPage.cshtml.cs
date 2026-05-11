@@ -69,14 +69,9 @@ namespace Conwy_Cafe_Webpage.Pages
             {
                 var errorMessage = await result.Content.ReadAsStringAsync(); // Read the error message from the API response
                 Console.WriteLine(errorMessage);
-                // Handle the error (e.g., log it, show an error message to the user, etc.)
-                // For simplicity, we will just redirect back to the cart page with an error message
-                TempData["ErrorMessage"] = "There was an issue placing your order. Please try again.";
                 return RedirectToPage("/CartPage");
             }
-            //result.EnsureSuccessStatusCode(); // Ensure the API call was successful, you can also handle errors here if needed
-            
-
+          
 
             // 3. After successfully placing the order, clear the cart
             cartItems.Clear(); // Clear the cart items

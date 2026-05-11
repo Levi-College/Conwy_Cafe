@@ -27,6 +27,7 @@ namespace Conwy_Cafe_Web_API.Controllers
             public List<CartItem> CartItems { get; set; }
         }
 
+        // This is the HTTPPost method that the webpage will call to create the order in the database. It receives a CheckoutModel object in the request body.
         [HttpPost("checkout")]
         public async Task<IActionResult> CreateOrder([FromBody] CheckoutModel request)
         {
@@ -34,7 +35,9 @@ namespace Conwy_Cafe_Web_API.Controllers
             var order = new Order
             {
                 OrderDate = request.OrderDate,
-
+                CustomerName = request.CustomerName,
+                CustomerEmail = request.CustomerEmail,
+                PhoneNumber = request.CustomerPhone,
                 // Calculating the total amount by summing the total price of each cart item (which is calculated as BasePrice + ExtraPrice * PeopleCount, multiplied by Quantity)
                 TotalAmount = request.TotalPrice, // Calculated when place order is clicked in the carts page
             };
@@ -51,7 +54,6 @@ namespace Conwy_Cafe_Web_API.Controllers
                     BasketName = b.Name,
                     BasketPrice = b.BasePrice,
                     Quantity = b.Quantity, // This is the number of times the user wants to order this basket (e.g. 2x Family Feast)
-
                     NumberOfPeople = b.PeopleCount // This is the total number of people
                 };
 
@@ -70,19 +72,15 @@ namespace Conwy_Cafe_Web_API.Controllers
                     // Getting the items in the basket items list
                     foreach (var bi in basketTemplate.BasketItems)
                     {
-                        // Logic: 1-3-1 rule. Sides (3), Main/Drink (1).
-                        // A variable is used to set the number of items (if side qty = 3 else 1)
-                        //int qty = 0;
-                        //if (bi.Item?.ItemType != ItemType.Side) { qty = 1; }
-                        //else { qty = 3; }
-                        //int baseQtyPerPerson = bi.Item.ItemType == ItemType.Side ? 3 : 1;
-
                         var orderItem = new OrderItems
                         {
+                            
                             OrderBasketId = orderBasket.Id,
                             ItemId = bi.ItemId,
-                            // Quantity is based on the number of people in the order. Already calculated when the order is sent from the website
-                            Quantity = b.PeopleCount
+                            ItemName = bi.Item.Name,
+                            // Quantity is based on the number of people in the order and the number of baskets ordered.
+                            // For example, if the user orders 2x Family Feast for 4 people, then the quantity of each item in the Family Feast will be 8 (4 people x 2 baskets).
+                            Quantity = b.PeopleCount * b.Quantity
                         };
                         
                         _context.OrderItems.Add(orderItem);
