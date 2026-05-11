@@ -55,9 +55,9 @@ namespace Conwy_Cafe_Webpage.Pages
             // 1. Create an order object and populate it with the cart items and other necessary details (e.g., customer info, order date, etc.)
             CheckoutModel model = new CheckoutModel()
             {
-                CustomerName = "Trial",
-                CustomerEmail = "Trial",
-                CustomerPhone = "Trial",
+                CustomerName = custName,
+                CustomerEmail = custEmail,
+                CustomerPhone = custPhone,
                 TotalPrice = cartItems.Sum(x => x.TotalPrice),
                 CartItems = cartItems
             };
