@@ -10,5 +10,6 @@
         // Quantity of the item in the order. Based on the number of people from the OrderBaskets table,
         // for example if there are 6 people in the basket, and the item is "Bread", the quantity of "Bread" in the OrderItems table will be 6 (1 bread per person).
         public int Quantity { get; set; } 
+        public Item Item { get; set; } // Used to get the item details 
     }
 }

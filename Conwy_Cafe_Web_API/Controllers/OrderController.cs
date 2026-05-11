@@ -34,6 +34,7 @@ namespace Conwy_Cafe_Web_API.Controllers
             var orders = await _context.Orders
                 .Include(o => o.OrderBaskets) // Include related OrderBaskets (joining the orders and the order baskets)
                 .ThenInclude(ob => ob.OrderItems) // Include the related OrderItems for each OrderBasket (joining the order baskets and the order items)
+                .ThenInclude(oi => oi.Item)
                 .ToListAsync();
             return Ok(orders);
         }
