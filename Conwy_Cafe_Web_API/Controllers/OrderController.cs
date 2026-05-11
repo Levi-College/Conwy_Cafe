@@ -27,6 +27,17 @@ namespace Conwy_Cafe_Web_API.Controllers
             public List<CartItem> CartItems { get; set; }
         }
 
+        // HTTP get method to retrieve all orders from the database.Used by the admin app to show the list of orders.
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.OrderBaskets) // Include related OrderBaskets (joining the orders and the order baskets)
+                .ThenInclude(ob => ob.OrderItems) // Include the related OrderItems for each OrderBasket (joining the order baskets and the order items)
+                .ToListAsync();
+            return Ok(orders);
+        }
+
         // This is the HTTPPost method that the webpage will call to create the order in the database. It receives a CheckoutModel object in the request body.
         [HttpPost("checkout")]
         public async Task<IActionResult> CreateOrder([FromBody] CheckoutModel request)
@@ -47,7 +58,7 @@ namespace Conwy_Cafe_Web_API.Controllers
             foreach (var b in request.CartItems)
             {
                 // 2. Create the OrderBasket (The middle link)
-                var orderBasket = new OrderBaskets
+                var orderBasket = new OrderBasket
                 {
                     OrderId = order.Id,
                     BasketId = b.BasketId,
@@ -72,7 +83,7 @@ namespace Conwy_Cafe_Web_API.Controllers
                     // Getting the items in the basket items list
                     foreach (var bi in basketTemplate.BasketItems)
                     {
-                        var orderItem = new OrderItems
+                        var orderItem = new OrderItem
                         {
                             
                             OrderBasketId = orderBasket.Id,

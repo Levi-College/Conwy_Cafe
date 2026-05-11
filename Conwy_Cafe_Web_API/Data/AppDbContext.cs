@@ -14,8 +14,8 @@ namespace Conwy_Cafe_Web_API.Data
         public DbSet<Item> Items => Set<Item>();
         public DbSet<BasketItems> BasketItems => Set<BasketItems>();
         public DbSet<Order> Orders => Set<Order>();
-        public DbSet<OrderBaskets> OrderBaskets => Set<OrderBaskets>();
-        public DbSet<OrderItems> OrderItems => Set<OrderItems>();
+        public DbSet<OrderBasket> OrderBaskets => Set<OrderBasket>();
+        public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 
         // This is run when the model is created
         // Allows to configure the model (e.g., specify relationships, constraints, conversions) using the ModelBuilder API. This method is called by the Entity Framework when it is setting up the model based on the defined DbSet properties and their corresponding classes.

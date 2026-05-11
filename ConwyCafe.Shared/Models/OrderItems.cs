@@ -1,6 +1,6 @@
 ﻿namespace ConwyCafe.Shared.Models
 {
-    public class OrderItems
+    public class OrderItem
     {
         public int Id { get; set; }
         public int ItemId { get; set; } // Foreign key to Item
