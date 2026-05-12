@@ -41,7 +41,7 @@
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Customer" Binding="{Binding CustomerName}" Width="2*"/>
                         <DataGridTextColumn Header="Date" Binding="{Binding OrderDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="120"/>
-                        <DataGridTextColumn Header="Total" Binding="{Binding TotalAmount, StringFormat=C}" Width="*"/>
+                        <DataGridTextColumn Header="Total" Binding="{Binding TotalAmount, StringFormat= '£{0}'}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
@@ -73,7 +73,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Baskets &amp; Pack List" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Foreground="#333"/>
+                <TextBlock Text="Baskets &amp; Items List" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Foreground="#333"/>
 
                 <ScrollViewer Grid.Row="1">
                     <ItemsControl ItemsSource="{Binding SelectedOrder.OrderBaskets}">
@@ -89,6 +89,7 @@
                                             <StackPanel Orientation="Horizontal" Grid.Column="0">
                                                 <TextBlock Text="{Binding BasketName}" FontWeight="Bold" FontSize="14" Foreground="#2E7D32"/>
                                                 <TextBlock Text="{Binding NumberOfPeople, StringFormat=' ({0} People)'}" Foreground="Gray" VerticalAlignment="Bottom" Margin="5,0,0,2"/>
+                                                <TextBlock Text="{Binding BasketPrice, StringFormat= '(£ {0} Per basket (covers 2 people). For extra price per person (refer basket details) )'}" Foreground="Gray" VerticalAlignment="Bottom" Margin="5,0,0,2"/>
                                             </StackPanel>
                                             <TextBlock Grid.Column="1" Text="{Binding Quantity, StringFormat='Qty: {0}'}" FontWeight="Bold"/>
                                         </Grid>
