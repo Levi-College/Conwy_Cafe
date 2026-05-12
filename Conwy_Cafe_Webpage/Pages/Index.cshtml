@@ -1,71 +1,210 @@
 ﻿@page
 @model IndexModel
 @{
+    // Setting the title shown in the browser tab
     ViewData["Title"] = "Conwy Cafe";
 }
 
-@* <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div> *@
+@*Used to get the models (baskets)*@
+@using ConwyCafe.Shared.Models
 
-
+<!-- Main page container with vertical spacing -->
 <div class="container py-5">
-    <h2 class="text-white mb-4">Our Special Baskets</h2>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var basket in Model.Baskets)
-        {
-            <div class="col">
-                <div class="card h-100 basket-card">
-                    <div class="basket-image-container">
-                        @if (!string.IsNullOrEmpty(basket.ImagePath))
-                        {
-                            @* Adding a prefix for the API image folder root https://localhost:7008/ *@
-                            <img src="https://localhost:7008/@basket.ImagePath.TrimStart('/')"
-                                 class="card-img-top"
-                                 alt="@basket.Name"
-                                 asp-append-version="true" />
-                        }
-                        else
-                        {
-                            <div class="no-image-placeholder">No Image Available</div>
-                        }
-                        <div class="price-badge">@basket.Price.ToString()</div>
-                    </div>
 
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-white">@basket.Name</h5>
-                        <p class="card-text text-muted flex-grow-1">
-                            @(basket.Description?.Length > 100 ? basket.Description.Substring(0, 100) + "..." : basket.Description)
-                        </p>
-                        
-                        <div class="mt-auto pt-3">
-                            <span class="badge rounded-pill bg-sage-outline">@basket.Category</span>
-                            <a asp-page="/BasketDetails" asp-route-id="@basket.Id" class="btn btn-primary btn-sm float-end">
-                                View Details
-                            </a>
+    <!-- Meat and Veg section (adults) -->
+    <div class="mb-5">
+
+        <!-- Section heading -->
+        <h2 class="text-black mb-4 border-bottom pb-2">
+            Adult Baskets
+        </h2>
+
+        <!-- Responsive Bootstrap grid -->
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center g-4">
+
+            @* 
+               Looping through ONLY adult baskets.
+               The basket category is an enum. (using models for this reason)
+            *@
+            @foreach (var basket in Model.Baskets.Where(x =>
+                x.Category == BasketCategory.Meat ||
+                x.Category == BasketCategory.Vegetarian))
+            {
+                <div class="col">
+
+                    <!-- Basket card -->
+                    <div class="card h-100 basket-card">
+
+                        <!-- Image container -->
+                        <div class="basket-image-container">
+
+                            @* 
+                               Checking if the basket has an image.
+                               If yes, display it.
+                            *@
+                            @if (!string.IsNullOrEmpty(basket.ImagePath))
+                            {
+                                <img src="https://localhost:7008/@basket.ImagePath.TrimStart('/')"
+                                     class="card-img-top"
+                                     alt="@basket.Name"
+                                     asp-append-version="true" />
+                            }
+                            else
+                            {
+                                @* Placeholder shown when no image exists *@
+                                <div class="no-image-placeholder">
+                                    No Image Available
+                                </div>
+                            }
+
+                            <!-- Basket price -->
+                            <div class="price-badge">
+                                £@basket.Price.ToString()
+                            </div>
+
                         </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-</div>
 
-@* @foreach (var basket in Model.Baskets)
-{
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">Basket ID: @basket.Id</h5>
-            <p class="card-text">Basket Name: @basket.Name</p>
-            <p class="card-text">Total Price: @basket.Price.ToString()</p>
-            <p class="card-text">Items:</p> *@
-            @* <ul>
-                @foreach (var item in basket)
-                {
-                    <li>@item.Name - Quantity: @item.Quantity, Price: @item.Price.ToString("C")</li>
-                }
-            </ul> *@
- @*        </div>
+                        <!-- Card body -->
+                        <div class="card-body d-flex flex-column">
+
+                            <!-- Basket name -->
+                            <h5 class="card-title text-dark">
+                                @basket.Name
+                            </h5>
+
+                            <!-- Basket description -->
+                            <p class="card-text text-muted flex-grow-1">
+
+                                @* 
+                                   Limiting description length to 100 characters
+                                   to keep card sizes consistent.
+                                *@
+                                @(basket.Description?.Length > 100
+                                    ? basket.Description.Substring(0, 100) + "..."
+                                    : basket.Description)
+
+                            </p>
+
+                            <!-- Bottom section of card -->
+                            <div class="mt-auto pt-3">
+
+                                <!-- Basket category badge -->
+                                <span class="badge rounded-pill bg-sage-outline">
+                                    @basket.Category
+                                </span>
+
+                                <!-- Link to basket details page -->
+                                <a asp-page="/BasketDetails"
+                                   asp-route-id="@basket.Id"
+                                   class="btn btn-primary btn-sm float-end">
+                                    View Details
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
     </div>
-} *@
+
+    <!-- CHILDREN'S BASKETS SECTION -->
+    <div>
+
+        <!-- Section heading -->
+        <h2 class="text-black mb-4 border-bottom pb-2">
+            Children's Baskets
+        </h2>
+
+        <!-- Responsive Bootstrap grid -->
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center g-4">
+
+            @*
+               Looping through ONLY children's baskets.
+            *@
+            @foreach (var basket in Model.Baskets.Where(x =>
+                x.Category == BasketCategory.ChildrenMeat ||
+                x.Category == BasketCategory.ChildrenVegetarian))
+            {
+                <div class="col">
+
+                    <!-- Basket card -->
+                    <div class="card h-100 basket-card">
+
+                        <!-- Image container -->
+                        <div class="basket-image-container">
+
+                            @* Display image if available *@
+                            @if (!string.IsNullOrEmpty(basket.ImagePath))
+                            {
+                                <img src="https://localhost:7008/@basket.ImagePath.TrimStart('/')"
+                                     class="card-img-top"
+                                     alt="@basket.Name"
+                                     asp-append-version="true" />
+                            }
+                            else
+                            {
+                                <!-- Placeholder -->
+                                <div class="no-image-placeholder">
+                                    No Image Available
+                                </div>
+                            }
+
+                            <!-- Basket price -->
+                            <div class="price-badge">
+                                £@basket.Price.ToString()
+                            </div>
+
+                        </div>
+
+                        <!-- Card body -->
+                        <div class="card-body d-flex flex-column">
+
+                            <!-- Basket title -->
+                            <h5 class="card-title text-dark">
+                                @basket.Name
+                            </h5>
+
+                            <!-- Basket description -->
+                            <p class="card-text text-muted flex-grow-1">
+
+                                @(basket.Description?.Length > 100
+                                    ? basket.Description.Substring(0, 100) + "..."
+                                    : basket.Description)
+
+                            </p>
+
+                            <!-- Bottom card section -->
+                            <div class="mt-auto pt-3">
+
+                                <!-- Category badge -->
+                                <span class="badge rounded-pill bg-sage-outline">
+                                    @basket.Category
+                                </span>
+
+                                <!-- Details button -->
+                                <a asp-page="/BasketDetails"
+                                   asp-route-id="@basket.Id"
+                                   class="btn btn-primary btn-sm float-end">
+                                    View Details
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

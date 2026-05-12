@@ -72,11 +72,18 @@ namespace Conwy_Cafe_Webpage.Pages
                 return RedirectToPage("/CartPage");
             }
           
+            // Getting the order id from the response
+            var orderId = await result.Content.ReadAsStringAsync(); // Assuming the API returns the order ID as a string in the response body
 
             // 3. After successfully placing the order, clear the cart
             cartItems.Clear(); // Clear the cart items
             HttpContext.Session.SetObjectAsJson("Cart", cartItems); // Update the session with the empty cart
-            return RedirectToPage("/CartPage");
+
+            // Showing an order confirmation message (redirecting)
+            // id = orderId is used to pass the order id to the order confirmation page so that it can display the order details.
+            // As the confirmation page has page/{orderId} in its route, it can accept the order id as a parameter and use it to fetch the order details from the database or API and display them to the user.
+            return RedirectToPage("/OrderConfirmation", new { id = orderId }); // Redirect to an order confirmation page (you can create this page to show order details)
+            //return RedirectToPage("/CartPage");
         }
 
         // This method is called when the user clicks the "Remove" button for an item in the cart. It removes the item from the cart and updates the session.

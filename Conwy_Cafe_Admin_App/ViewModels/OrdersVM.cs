@@ -71,6 +71,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         public void RefreshPage(object? obj)
         {
             SelectedOrder = null; // Clear the selected order when refreshing the page
+            SelectedOrderType = "All"; // Reset the order filter to "All" when refreshing the page
             GetAllOrders();
         }
         public async void LoadData()

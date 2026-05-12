@@ -27,6 +27,19 @@ namespace Conwy_Cafe_Web_API.Controllers
             public List<CartItem> CartItems { get; set; }
         }
 
+        // Getting one order by ID (api/order/{id})
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Order>> GetOrder(int id)
+        {
+            var order = await _context.Orders
+                .Include(o => o.OrderBaskets) // Include related OrderBaskets (joining the orders and the order baskets)
+                .ThenInclude(ob => ob.OrderItems) // Include the related OrderItems for each OrderBasket (joining the order baskets and the order items)
+                .ThenInclude(oi => oi.Item) // Include the related Item for each OrderItem (joining the order items and the items)
+                .FirstOrDefaultAsync(o => o.Id == id); // WHERE ID = id
+            if (order == null) { return NotFound(); }
+            return Ok(order);
+        }
+
         // HTTP get method to retrieve all orders from the database.Used by the admin app to show the list of orders.
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()

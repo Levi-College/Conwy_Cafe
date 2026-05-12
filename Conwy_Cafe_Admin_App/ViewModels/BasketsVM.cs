@@ -114,7 +114,6 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
         public async Task GetAllBaskets()
         {
-            RefreshPage(null); // Can be used to refresh the pages
             try
             {
                 // calling the api to get all baskets and adding them to the observable collection
