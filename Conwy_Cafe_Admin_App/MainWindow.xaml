@@ -8,6 +8,8 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:AdminVM}"
         mc:Ignorable="d"
         d:DesignHeight="800" d:DesignWidth="1000"
+        WindowState="Maximized"
+        ResizeMode="NoResize"
         Title="MainWindow" Height="800" Width="900">
     
     <Grid Style="{StaticResource AdminBackground}">
