@@ -23,11 +23,10 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         // Declaring variables
         private Basket _selectedBasket;
         private Item _selectedItem;
-        private Order _selectedOrder;
 
         public ICommand EditBasketWindowCommand { get; }
         //public ICommand NewBasketCommand { get; }
-        public ICommand RefreshBasketsCommand {  get; }
+        public ICommand RefreshBasketsCommand { get; }
 
         public ObservableCollection<Basket> AllBaskets { get; set; } = new ObservableCollection<Basket>();
         public List<Item> AllItems { get; set; } = new List<Item>();
@@ -66,13 +65,6 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             set { _selectedItem = value; OnPropertyChanged(nameof(SelectedItem)); }
         }
 
-        //public Order SelectedOrder
-        //{
-        //    get { return _selectedOrder; }
-        //    set { _selectedOrder = value; OnPropertyChanged(nameof(SelectedOrder)); }
-        //}
-
-
         // Setting the full path of the image to be displayed in the UI. This property constructs the full URL for the image based on the ImagePath of the selected basket. If there is no selected basket or if the ImagePath is null or empty, it returns null, which can be used to handle cases where there is no image to display.
         public string FullImagePath
         {
@@ -85,8 +77,6 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 return $"https://localhost:7008/{SelectedBasket.ImagePath}";
             }
         }
-
-
 
         // Methods
         public async void LoadData()
@@ -117,11 +107,14 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             EditBasketWindow editWindow = new EditBasketWindow();
             editWindow.DataContext = EditBasketVM;
             editWindow.ShowDialog();
+
+            // Refreshing the page
+            RefreshPage(obj);
         }
 
         public async Task GetAllBaskets()
         {
-            //RefreshPage(null); // Can be used to refresh the pages
+            RefreshPage(null); // Can be used to refresh the pages
             try
             {
                 // calling the api to get all baskets and adding them to the observable collection
@@ -148,10 +141,9 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                 if (response != null)
                 {
                     AllItems.Clear(); // Clear the existing items in the observable collection before adding new ones to avoid duplicates.
-                    foreach (var item in response) // Iterate through each item in the response (using .Result to get the result of the asynchronous operation).
-                    {
-                        AllItems.Add(item); // Add each item to the 'AllItems' observable collection.
-                    }
+                    // Iterate through each item in the response (using .Result to get the result of the asynchronous operation).
+                    // Add each item to the 'AllItems' observable collection.
+                    foreach (var item in response) { AllItems.Add(item); }
                 }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }

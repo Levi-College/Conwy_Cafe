@@ -119,8 +119,6 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             set { _disableElementsForNewItem = value; OnPropertyChanged(); }
         }
 
-
-
         // Methods
         public async void LoadData()
         {
@@ -178,17 +176,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
         }
 
-        public void OpenEditItemWindow(object? obj)
-        {
-            if (SelectedItem == null) { MessageBox.Show("Please select a basket to edit."); return; }
-            //Setting the datacontext
-            //var EditBasketVM = new EditBasketVM(SelectedBasket, AllItems);
-            //// This method would contain logic to open a new window for editing a basket. 
-            //EditBasketWindow editWindow = new EditBasketWindow();
-            //editWindow.DataContext = EditBasketVM;
-            //editWindow.ShowDialog();
-        }
-
+   
         public async Task FilterItemsByType(string itemType)
         {
             // If "All" is selected, show all items

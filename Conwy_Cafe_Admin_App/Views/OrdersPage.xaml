@@ -123,8 +123,8 @@
 
         <Grid Grid.Row="0" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <ComboBox ItemsSource="{Binding OrdersFilterList}" 
-                      SelectedItem="{Binding SelectedOrderStatus}"
+                <ComboBox ItemsSource="{Binding OrderFilterList}" 
+                      SelectedItem="{Binding SelectedOrderType}"
                       Style="{StaticResource ModernComboBoxStyle}"
                       Margin="10" Width="150"/>
                 <Button Content="Refresh List" Style="{StaticResource PageButton}" Command="{Binding RefreshOrdersCommand}"/>
@@ -164,7 +164,7 @@
                     <Label Content="Phone:" Foreground="Gray" FontSize="10"/>
                     <TextBlock Text="{Binding SelectedOrder.PhoneNumber}" Foreground="White" Margin="0,0,0,10"/>
 
-                    <Button Content="Archive Order" Command="{Binding ArchiveCommand}" 
+                    <Button Content="Archive Order" Command="{Binding ArchiveOrderCommand}" 
                         Style="{StaticResource btnAdd}" Margin="0,20,0,0"
                         IsEnabled="{Binding EnableArchiveButton}"/>
                 </StackPanel>

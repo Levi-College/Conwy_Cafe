@@ -86,7 +86,7 @@ namespace Conwy_Cafe_Web_API.Controllers
                     {
                         var orderItem = new OrderItem
                         {
-                            
+
                             OrderBasketId = orderBasket.Id,
                             ItemId = bi.ItemId,
                             ItemName = bi.Item.Name,
@@ -94,7 +94,7 @@ namespace Conwy_Cafe_Web_API.Controllers
                             // For example, if the user orders 2x Family Feast for 4 people, then the quantity of each item in the Family Feast will be 8 (4 people x 2 baskets).
                             Quantity = b.PeopleCount * b.Quantity
                         };
-                        
+
                         _context.OrderItems.Add(orderItem);
                     }
                 }
@@ -105,6 +105,17 @@ namespace Conwy_Cafe_Web_API.Controllers
             // Return the ID so the webpage can show "Order #1234 Placed!"
             return Ok(order.Id.ToString());
 
+        }
+
+        // Archive an order (api/order/archive/{id})
+        [HttpPut("archive/{id}")]
+        public async Task<IActionResult> ArchiveOrder(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null) { return NotFound(); }
+            order.Archived = true;
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
