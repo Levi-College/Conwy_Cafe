@@ -87,16 +87,12 @@
                             <TextBox Text="{Binding SelectedItem.Name, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>
 
                             <Label Content="Item Type:" Style="{StaticResource LabelStyle}"/>
-                            <!--<TextBox Text="{Binding SelectedItem.ItemType, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>-->
 
                             <ComboBox ItemsSource="{Binding ItemDisplayNames}"
                                        SelectedValue="{Binding SelectedItem.ItemType}"
                                        SelectedValuePath="Key"
                                        DisplayMemberPath="Value"
                                        Style="{StaticResource ModernComboBoxStyle}" />
-
-                            <!--<Label Content="Base Price:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedItem.BasePrice, Mode=TwoWay}" Style="{StaticResource InputTextBox}" InputScope="TelephoneNumber"/>-->
 
                             <Label Content="Description:" Style="{StaticResource LabelStyle}"/>
                             <TextBox Text="{Binding SelectedItem.Description, Mode=TwoWay}" Style="{StaticResource InputTextBox}"

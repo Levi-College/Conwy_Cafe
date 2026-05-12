@@ -7,9 +7,7 @@
              xmlns:viewmodels="clr-namespace:Conwy_Cafe_Admin_App.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:BasketsVM}"
              mc:Ignorable="d" d:DesignWidth="800" Height="800">
-             <!--d:DataContext="{d:DesignInstance Type=viewmodels:BasketsVM}"-->
-             
-
+            
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -58,7 +56,6 @@
 
 
                 <Grid>
-
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -90,7 +87,7 @@
                                       SelectedValue="{Binding SelectedBasket.Category}"
                                       SelectedValuePath="Key"
                                       DisplayMemberPath="Value"
-                                      Style="{StaticResource ModernComboBoxStyle}" IsReadOnly="True"/>
+                                      Style="{StaticResource ModernComboBoxStyle}" IsEnabled="False" IsReadOnly="True"/>
                     
                             <!-- Description -->
                             <Label Content="Description:" Style="{StaticResource LabelStyle}"/>
@@ -146,18 +143,6 @@
                                     Command="{Binding EditBasketWindowCommand}"
                                     Margin="0,10,0,0" 
                                     Style="{StaticResource PageButton}"/>
-
-                            <!-- Status Checkbox -->
-                            <!--<CheckBox IsChecked="{Binding SelectedBasket.IsActive, Mode=TwoWay}" 
-                                      Content="Is Actively Selling?" Foreground="White"
-                                      Margin="0,15,0,0"
-                                      FontSize="14"
-                                      VerticalContentAlignment="Center"/>-->
-
-                            <!-- Image Path (For Preview/Reference) -->
-                            <!--<Label Content="Image Path:" Style="{StaticResource LabelStyle}" Margin="0,10,0,0"/>
-                            <TextBox Text="{Binding SelectedBasket.ImagePath, Mode=TwoWay}" Style="{StaticResource InputTextBox}" IsReadOnly="True"/>-->
-
                         </StackPanel>
                     </ScrollViewer>
 

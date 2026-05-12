@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -22,7 +20,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Final line before the app is built, so that all services are registered before the app is built
 // Nothing can be added after this line, as the app is built and ready to run
 var app = builder.Build();
-
 
 
 // Configure the HTTP request pipeline.

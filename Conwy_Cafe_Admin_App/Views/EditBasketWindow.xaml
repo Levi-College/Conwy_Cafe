@@ -57,11 +57,6 @@
                                 </Style>
                             </Image.Style>
                         </Image>
-
-                        <!-- Placeholder text if no image exists -->
-                        <!--<TextBlock Text="No Image Available" Foreground="#555" 
-                                   VerticalAlignment="Center" HorizontalAlignment="Center"
-                                   Visibility="{Binding FullImagePath}"/>-->
                     </Grid>
                 </Border>
 
@@ -113,7 +108,6 @@
 
                     <TextBlock Text="Drink" Foreground="#F1C40F" FontSize="12" Margin="0,15,0,5"/>
                     <DockPanel LastChildFill="True">
-                        <!--<Button Content="Swap" Click="SwapDrink_Click" DockPanel.Dock="Right" Width="60" Margin="10,0,0,0"/>-->
                         <TextBlock Text="{Binding DrinkItems.Name, TargetNullValue='No Drink Selected'}" VerticalAlignment="Center" Foreground="White"/>
                         <ComboBox ItemsSource="{Binding DrinkItems}" 
                                   SelectedValue="{Binding DrinkSlot.ItemId}"

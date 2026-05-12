@@ -31,8 +31,6 @@ namespace Conwy_Cafe_Web_API.Controllers
                 query = query.Where(b => b.IsActive);
             }
 
-            //return await _context.Baskets.Where(b => b.IsActive).ToListAsync();
-
             // Gets baskets depending on the query
             return await query.ToListAsync();
         }
