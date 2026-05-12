@@ -98,7 +98,6 @@ namespace Conwy_Cafe_Web_API.Controllers
                         _context.OrderItems.Add(orderItem);
                     }
                 }
-
             }
 
             await _context.SaveChangesAsync();

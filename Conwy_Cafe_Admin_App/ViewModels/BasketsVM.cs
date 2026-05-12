@@ -17,17 +17,17 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             LoadData();
 
             EditBasketWindowCommand = new RelayCommand(OpenEditBasketWindow);
+            RefreshBasketsCommand = new RelayCommand(RefreshPage);
         }
 
         // Declaring variables
         private Basket _selectedBasket;
         private Item _selectedItem;
         private Order _selectedOrder;
-        //private string _fullImageUri;
-
 
         public ICommand EditBasketWindowCommand { get; }
-        public ICommand NewBasketCommand { get; }
+        //public ICommand NewBasketCommand { get; }
+        public ICommand RefreshBasketsCommand {  get; }
 
         public ObservableCollection<Basket> AllBaskets { get; set; } = new ObservableCollection<Basket>();
         public List<Item> AllItems { get; set; } = new List<Item>();
@@ -66,13 +66,14 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             set { _selectedItem = value; OnPropertyChanged(nameof(SelectedItem)); }
         }
 
-        public Order SelectedOrder
-        {
-            get { return _selectedOrder; }
-            set { _selectedOrder = value; OnPropertyChanged(nameof(SelectedOrder)); }
-        }
+        //public Order SelectedOrder
+        //{
+        //    get { return _selectedOrder; }
+        //    set { _selectedOrder = value; OnPropertyChanged(nameof(SelectedOrder)); }
+        //}
 
 
+        // Setting the full path of the image to be displayed in the UI. This property constructs the full URL for the image based on the ImagePath of the selected basket. If there is no selected basket or if the ImagePath is null or empty, it returns null, which can be used to handle cases where there is no image to display.
         public string FullImagePath
         {
             get
@@ -96,12 +97,15 @@ namespace Conwy_Cafe_Admin_App.ViewModels
             //await GetAllCategories();
         }
 
-
-        public void RefreshPage()
+        // This method would contain logic to refresh the page, such as re-fetching data from the data source and updating the relevant properties or collections in the view model. 
+        public async void RefreshPage(object? obj)
         {
-            // This method would contain logic to refresh the page, such as re-fetching data from the data source and updating the relevant properties or collections in the view model. 
-            // For example, it might look like this:
-            // GetAllBaskets();
+            // 1. Clearing the list of baskets and also clearing the selected basket
+            AllBaskets.Clear();
+            SelectedBasket = null;
+
+            // 2. Getting all the details
+            await GetAllBaskets();
         }
 
         public void OpenEditBasketWindow(object? obj)
@@ -117,7 +121,7 @@ namespace Conwy_Cafe_Admin_App.ViewModels
 
         public async Task GetAllBaskets()
         {
-            //RefreshPage(); // Can be used to refresh the pages
+            //RefreshPage(null); // Can be used to refresh the pages
             try
             {
                 // calling the api to get all baskets and adding them to the observable collection
@@ -149,7 +153,6 @@ namespace Conwy_Cafe_Admin_App.ViewModels
                         AllItems.Add(item); // Add each item to the 'AllItems' observable collection.
                     }
                 }
-
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
 

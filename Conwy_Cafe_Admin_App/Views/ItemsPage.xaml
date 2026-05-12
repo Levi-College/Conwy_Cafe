@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Conwy_Cafe_Admin_App.Views"
+             xmlns:local="clr-namespace:Conwy_Cafe_Admin_App.Views" 
+             xmlns:viewmodels="clr-namespace:Conwy_Cafe_Admin_App.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:ItemsVM}"
              mc:Ignorable="d" 
                      d:DesignHeight="600" d:DesignWidth="800">
 
@@ -15,13 +17,13 @@
 
         <Grid Grid.Row="0" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ClientsFilterList}" Style="{StaticResource ModernComboBoxStyle}"
-               SelectedItem="{Binding SelectedClientStatus, UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding ItemsFilterList}" Style="{StaticResource ModernComboBoxStyle}"
+               SelectedItem="{Binding SelectedItemType, UpdateSourceTrigger=PropertyChanged}"
                Margin="10" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <Button Content="Refresh List" Style="{StaticResource PageButton}" Command="{Binding RefreshClientsCommand}"/>
+                <Button Content="Refresh List" Style="{StaticResource PageButton}" Command="{Binding RefreshItemsCommand}"/>
             </StackPanel>
 
-            <Button Content="New Client" Command="{Binding NewClientCommand}"  Style="{StaticResource NewJobButton}" />
+            <Button Content="New Item" Command="{Binding NewItemCommand}"  Style="{StaticResource NewJobButton}" />
         </Grid>
 
         <Grid Grid.Row="1">
@@ -37,15 +39,15 @@
 
 
                 <DataGrid Style="{StaticResource MainDataGridStyle}"
-                  ItemsSource="{Binding ClientList}" 
-                  SelectedItem="{Binding SelectedClient}"
+                  ItemsSource="{Binding AllItems}" 
+                  SelectedItem="{Binding SelectedItem}"
                   AutoGenerateColumns="False" 
                   IsReadOnly="True">
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding ClientId}" Width="50"/>
-                        <DataGridTextColumn Header="Client Name" Binding="{Binding Name}" Width="2*"/>
-                        <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="2*"/>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Item" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Type" Binding="{Binding ItemType}" Width="*"/>
 
                     </DataGrid.Columns>
                 </DataGrid>
@@ -76,22 +78,28 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Label Content="Client ID:" Style="{StaticResource LabelStyle}" Grid.Column="0"/>
-                                <TextBox Text="{Binding SelectedClient.ClientId, Mode=TwoWay}" IsReadOnly="True" Style="{StaticResource InputTextBox}"
+                                <Label Content="Item ID:" Style="{StaticResource LabelStyle}" Grid.Column="0"/>
+                                <TextBox Text="{Binding SelectedItem.Id, Mode=TwoWay}" IsReadOnly="True" Style="{StaticResource InputTextBox}"
                                  Grid.Column="1"/>
                             </Grid>
 
-                            <Label Content="Contact Person / Full Name:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedClient.Name, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>
+                            <Label Content="Item Name:" Style="{StaticResource LabelStyle}"/>
+                            <TextBox Text="{Binding SelectedItem.Name, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>
 
-                            <Label Content="Contact Email Address:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedClient.Email, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>
+                            <Label Content="Item Type:" Style="{StaticResource LabelStyle}"/>
+                            <!--<TextBox Text="{Binding SelectedItem.ItemType, Mode=TwoWay}" Style="{StaticResource InputTextBox}"/>-->
 
-                            <Label Content="Contact Phone Number:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedClient.Phone, Mode=TwoWay}" Style="{StaticResource InputTextBox}" InputScope="TelephoneNumber"/>
+                            <ComboBox ItemsSource="{Binding ItemDisplayNames}"
+                                       SelectedValue="{Binding SelectedItem.ItemType}"
+                                       SelectedValuePath="Key"
+                                       DisplayMemberPath="Value"
+                                       Style="{StaticResource ModernComboBoxStyle}" />
 
-                            <Label Content="Client/Business Address:" Style="{StaticResource LabelStyle}"/>
-                            <TextBox Text="{Binding SelectedClient.ClientAddress, Mode=TwoWay}" Style="{StaticResource InputTextBox}"
+                            <!--<Label Content="Base Price:" Style="{StaticResource LabelStyle}"/>
+                            <TextBox Text="{Binding SelectedItem.BasePrice, Mode=TwoWay}" Style="{StaticResource InputTextBox}" InputScope="TelephoneNumber"/>-->
+
+                            <Label Content="Description:" Style="{StaticResource LabelStyle}"/>
+                            <TextBox Text="{Binding SelectedItem.Description, Mode=TwoWay}" Style="{StaticResource InputTextBox}"
                              Height="80" VerticalContentAlignment="Top" 
                              TextWrapping="Wrap" AcceptsReturn="True"/>
                         </StackPanel>
@@ -101,18 +109,17 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button Content="Delete" 
+                        <!--<Button Content="Delete" 
                         Command="{Binding DeleteClientCommand}" IsEnabled="{Binding DisableItemsForNewClient}" Margin="0,0,5,0" Grid.Column="0"
-                        Style="{StaticResource btnDelete}"/>
+                        Style="{StaticResource btnDelete}"/>-->
 
-                        <Button Content="Update" Margin="0,0,5,0" Grid.Column="1"
-                        Command="{Binding UpdateClientCommand}" IsEnabled="{Binding DisableItemsForNewClient}" Style="{StaticResource btnUpdate}"/>
+                        <Button Content="Update" Margin="0,0,5,0" Grid.Column="0"
+                        Command="{Binding UpdateItemCommand}" IsEnabled="{Binding DisableElementsForNewItem}" Style="{StaticResource btnUpdate}"/>
 
-                        <Button Content="Add New" Margin="0,0,5,0" Grid.Column="2"
-                        Command="{Binding AddClientCommand}"  Style="{StaticResource btnAdd}" IsEnabled="{Binding EnableItemsForNewClient}" FontWeight="Bold"/>
+                        <Button Content="Add New" Margin="0,0,5,0" Grid.Column="1"
+                        Command="{Binding AddItemCommand}"  Style="{StaticResource btnAdd}" IsEnabled="{Binding EnableElementsForNewItem}" FontWeight="Bold"/>
                     </Grid>
                 </Grid>
             </Border>

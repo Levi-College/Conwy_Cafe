@@ -11,10 +11,15 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         public OrdersVM()
         {
             LoadData();
+
+            RefreshOrdersCommand = new RelayCommand(RefreshPage);
+            ArchiveOrderCommand = new RelayCommand(ArchiveOrder);
         }
 
         // Variables
         private Order _selectedOrder;
+        private string _selectedOrderType = "All"; // Default to "All" to show all orders initially
+        private bool _enableArchiveButton = false; // Archive button is disabled by default. Only enabled if a non-archived order is selected.
 
         public ObservableCollection<Order> AllOrders { get; set; } = new ObservableCollection<Order>();
 
@@ -22,7 +27,9 @@ namespace Conwy_Cafe_Admin_App.ViewModels
         public Order SelectedOrder
         {
             get { return _selectedOrder; }
-            set { _selectedOrder = value; OnPropertyChanged(nameof(SelectedOrder)); }
+            set { 
+                _selectedOrder = value; 
+                OnPropertyChanged(nameof(SelectedOrder)); }
         }
 
 

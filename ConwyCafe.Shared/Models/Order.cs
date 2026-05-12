@@ -11,5 +11,6 @@
 
         // Holds the list of all baskets in the order
         public List<OrderBasket> OrderBaskets { get; set; } = new List<OrderBasket>();     
+        public bool Archived { get; set; } // Checks if the order is archived or not
     }
 }
